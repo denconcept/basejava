@@ -25,6 +25,10 @@ public class ArrayStorage {
         return null;
     }
 
+    public int size() {
+        return STORAGE_SIZE - resumeCount;
+    }
+
     public void save(Resume r) {
         storage[resumeCount++] = r;
     }
@@ -45,9 +49,5 @@ public class ArrayStorage {
     public void clear() {
         Arrays.fill(storage, 0, resumeCount, null);
         resumeCount = 0;
-    }
-
-    public int size() {
-        return STORAGE_SIZE - resumeCount;
     }
 }
