@@ -26,7 +26,7 @@ public class ArrayStorage {
     }
 
     public int size() {
-        return STORAGE_SIZE - resumeCount;
+        return resumeCount;
     }
 
     public void save(Resume r) {
@@ -37,9 +37,7 @@ public class ArrayStorage {
         for (int i = 0; i < resumeCount; i++) {
             if (uuid.equals(storage[i].toString())) {
                 resumeCount--;
-                if (i != resumeCount) {
-                    System.arraycopy(storage, i + 1, storage, i, resumeCount - i);
-                }
+                storage[i] = storage[resumeCount];
                 storage[resumeCount] = null;
                 break;
             }
