@@ -1,19 +1,23 @@
+import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.ArrayStorage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Interactive test for ArrayStorage implementation
+ * Interactive test for ArrayStorage implementation.
  * (just run, no need to understand)
  */
 public class MainArray {
-    private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    private static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - " +
+                    "(list | size | save uuid | delete uuid | get uuid | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (params.length < 1 || params.length > 2) {
                 System.out.println("Неверная команда.");
@@ -33,24 +37,32 @@ public class MainArray {
                 case "save":
                     r = new Resume();
                     r.uuid = uuid;
-                    ARRAY_STORAGE.save(r);
+                    boolean isSaved = ARRAY_STORAGE.save(r);
+                    System.out.println(isSaved ? r.uuid + " saved" : "Resume is existing");
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(uuid);
+                    boolean isDeleted = ARRAY_STORAGE.delete(uuid);
+                    System.out.println(isDeleted ?
+                            uuid + " deleted" :
+                            "The resume does not exist");
                     printAll();
                     break;
                 case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
+                    Resume resume = ARRAY_STORAGE.get(uuid);
+                    System.out.println(resume == null ?
+                            "The resume does not exist" :
+                            resume.toString());
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
+                    System.out.println("Cleared");
                     printAll();
                     break;
                 case "exit":
                     return;
                 default:
-                    System.out.println("Неверная команда.");
+                    System.out.println("Неверная команда");
                     break;
             }
         }
