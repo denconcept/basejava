@@ -1,10 +1,8 @@
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
 
-/**
- * Test for your ArrayStorage implementation.
- */
 public class MainTestArrayStorage {
+
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
@@ -24,9 +22,7 @@ public class MainTestArrayStorage {
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
-        boolean isUpdate = ARRAY_STORAGE.update(r1);
-        System.out.println(isUpdate ? "\nUpdated to " + r1.uuid : "\nResume doesn't exist");
-
+        ARRAY_STORAGE.update(r3);
         printAll();
         ARRAY_STORAGE.delete(r1.uuid);
         printAll();

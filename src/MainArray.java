@@ -1,15 +1,11 @@
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Interactive test for ArrayStorage implementation.
- * (just run, no need to understand)
- */
 public class MainArray {
+
     private static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
@@ -37,26 +33,21 @@ public class MainArray {
                 case "save":
                     r = new Resume();
                     r.uuid = uuid;
-                    boolean isSaved = ARRAY_STORAGE.save(r);
-                    System.out.println(isSaved ? r.uuid + " saved" : "Resume is existing");
+                    ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "delete":
-                    boolean isDeleted = ARRAY_STORAGE.delete(uuid);
-                    System.out.println(isDeleted ?
-                            uuid + " deleted" :
-                            "The resume does not exist");
+                    ARRAY_STORAGE.delete(uuid);
                     printAll();
                     break;
                 case "get":
                     Resume resume = ARRAY_STORAGE.get(uuid);
                     System.out.println(resume == null ?
-                            "The resume does not exist" :
+                            "\nError: the resume does not exist" :
                             resume.toString());
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
-                    System.out.println("Cleared");
                     printAll();
                     break;
                 case "exit":
