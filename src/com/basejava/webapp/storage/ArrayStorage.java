@@ -27,7 +27,7 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         if (resumeCount > STORAGE_SIZE) {
-            System.out.println("\nError: storage is full");
+            System.out.println("\nError: storage overflow");
             return;
         }
         if (getIndex(r.uuid) >= 0) {
