@@ -15,16 +15,10 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        return index >= 0 ? storage[index] : null;
-    }
-
-    public int getIndex(String uuid) {
-        for (int i = 0; i < resumeCount; i++) {
-            if (storage[i].toString().equals(uuid)) {
-                return i;
-            }
+        if (isMissing(index)) {
+            return null;
         }
-        return -1;
+        return storage[index];
     }
 
     public int size() {
@@ -66,10 +60,17 @@ public class ArrayStorage {
         if (isMissing(index)) {
             return;
         }
-        Resume r4 = new Resume();
-        r4.uuid = "uuid4";
-        storage[index] = r4;
+        storage[index] = r;
         System.out.println("\n" + r.uuid + " update successful");
+    }
+
+    protected int getIndex(String uuid) {
+        for (int i = 0; i < resumeCount; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static boolean isMissing(int index) {
