@@ -1,19 +1,20 @@
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
+import com.basejava.webapp.storage.Storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MainArray {
 
-    private static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    private static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
             System.out.print("Введите одну из команд - " +
-                    "(list | size | save uuid | delete uuid | get uuid | clear | exit): ");
+                    "(list | size | save uuid | delete uuid | get uuid | update uuid | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (params.length < 1 || params.length > 2) {
                 System.out.println("Неверная команда.");
@@ -32,8 +33,14 @@ public class MainArray {
                     break;
                 case "save":
                     r = new Resume();
-                    r.uuid = uuid;
+                    r.setUuid(uuid);
                     ARRAY_STORAGE.save(r);
+                    printAll();
+                    break;
+                case "update":
+                    r = new Resume();
+                    r.setUuid(uuid);
+                    ARRAY_STORAGE.update(r);
                     printAll();
                     break;
                 case "delete":
@@ -42,9 +49,9 @@ public class MainArray {
                     break;
                 case "get":
                     Resume resume = ARRAY_STORAGE.get(uuid);
-                    System.out.println(resume == null ?
-                            "\nError: the resume does not exist" :
-                            resume.toString());
+                    if (resume != null) {
+                        System.out.println(resume);
+                    }
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
