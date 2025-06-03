@@ -1,3 +1,5 @@
+package com.basejava.webapp;
+
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
 import com.basejava.webapp.storage.Storage;
@@ -32,14 +34,12 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "update":
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.update(r);
                     printAll();
                     break;
@@ -49,9 +49,7 @@ public class MainArray {
                     break;
                 case "get":
                     Resume resume = ARRAY_STORAGE.get(uuid);
-                    if (resume != null) {
-                        System.out.println(resume);
-                    }
+                    System.out.println(resume);
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
