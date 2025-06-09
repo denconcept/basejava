@@ -6,7 +6,6 @@ public class Resume implements Comparable<Resume> {
 
     private final String uuid;
 
-    @SuppressWarnings("unused")
     public Resume() {
         this(UUID.randomUUID().toString());
     }
