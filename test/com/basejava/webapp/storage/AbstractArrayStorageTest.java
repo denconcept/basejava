@@ -24,8 +24,11 @@ public abstract class AbstractArrayStorageTest {
     public void setUp() {
         storage.clear();
         storage.save(r1);
+        assertGet(r1);
         storage.save(r2);
+        assertGet(r2);
         storage.save(r3);
+        assertGet(r3);
     }
 
     @org.junit.jupiter.api.Test
