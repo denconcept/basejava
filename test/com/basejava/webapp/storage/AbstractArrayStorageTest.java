@@ -1,10 +1,11 @@
 package com.basejava.webapp.storage;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,13 +18,20 @@ public abstract class AbstractArrayStorageTest {
     private final Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    protected static final Resume RESUME_1 = new Resume(UUID_1);
     private static final String UUID_2 = "uuid2";
-    protected static final Resume RESUME_2 = new Resume(UUID_2);
     private static final String UUID_3 = "uuid3";
-    protected static final Resume RESUME_3 = new Resume(UUID_3);
     private static final String UUID_4 = "uuid4";
-    protected static final Resume RESUME_4 = new Resume(UUID_4);
+    protected static final Resume RESUME_1;
+    protected static final Resume RESUME_2;
+    protected static final Resume RESUME_3;
+    protected static final Resume RESUME_4;
+
+    static {
+        RESUME_1 = new Resume(UUID_1);
+        RESUME_2 = new Resume(UUID_2);
+        RESUME_3 = new Resume(UUID_3);
+        RESUME_4 = new Resume(UUID_4);
+    }
 
     protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -90,20 +98,20 @@ public abstract class AbstractArrayStorageTest {
 
     @org.junit.jupiter.api.Test
     void delete() {
-        storage.delete(RESUME_3.getUuid());
+        storage.delete(RESUME_3);
         assertSize(2);
         assertThrows(NotExistStorageException.class, () -> assertGet(RESUME_3));
     }
 
     @org.junit.jupiter.api.Test
     void deleteNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.delete(RESUME_4.getUuid()));
+        assertThrows(NotExistStorageException.class, () -> storage.delete(RESUME_4));
     }
 
     @org.junit.jupiter.api.Test
     void update() {
         storage.update(RESUME_3);
-        assertSame(RESUME_3, storage.get(RESUME_3.getUuid()));
+        assertSame(RESUME_3, storage.get(RESUME_3));
     }
 
     @org.junit.jupiter.api.Test
@@ -124,7 +132,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     private void assertGet(Resume resume) {
-        assertEquals(resume, storage.get(resume.getUuid()));
+        assertEquals(resume, storage.get(resume));
     }
 
     private void assertSize(int size) {

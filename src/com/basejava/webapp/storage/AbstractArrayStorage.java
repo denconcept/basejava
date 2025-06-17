@@ -1,70 +1,67 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
-import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+import com.basejava.webapp.exception.StorageException;
+import com.basejava.webapp.model.Resume;
+
+public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public final Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    public Resume get(Resume r) {
+        int index = getIndex(r.getUuid());
+        notExist(r, index);
         return storage[index];
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public final void save(Resume r) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
         int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        }
+        exist(r, index);
         insert(r, index);
         size++;
-        System.out.println(r.getUuid() + " saved");
+        printMsg(r.getUuid() + " saved");
     }
 
-    public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    public final void delete(Resume r) {
+        int index = getIndex(r.getUuid());
+        notExist(r, index);
         size--;
         fillGap(index);
         storage[size] = null;
-        System.out.println("\n" + uuid + " deleted");
+        printMsg("\n" + r.getUuid() + " deleted");
     }
 
+    @Override
     public final void update(Resume r) {
         int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
+        notExist(r, index);
         storage[index] = r;
-        System.out.println("\n" + r.getUuid() + " update successful");
+        printMsg("\n" + r.getUuid() + " update successful");
     }
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-        System.out.println("\nStorage was cleared");
+        printMsg("\nStorage was cleared");
     }
 
     protected abstract void insert(Resume r, int index);
