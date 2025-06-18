@@ -14,7 +14,7 @@ public class MainArray {
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        Resume r = null;
+        Resume r;
         while (true) {
             System.out.print("Введите одну из команд - " +
                     "(list | size | save uuid | delete uuid | get uuid | update uuid | clear | exit): ");
@@ -22,6 +22,10 @@ public class MainArray {
             if (params.length < 1 || params.length > 2) {
                 System.out.println("Неверная команда.");
                 continue;
+            }
+            String uuid = null;
+            if (params.length == 2) {
+                uuid = params[1].intern();
             }
             switch (params[0]) {
                 case "list":
@@ -31,21 +35,21 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume();
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "update":
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.update(r);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(r);
+                    ARRAY_STORAGE.delete(uuid);
                     printAll();
                     break;
                 case "get":
-                    Resume resume = ARRAY_STORAGE.get(r);
-                    System.out.println(resume);
+                    System.out.println(ARRAY_STORAGE.get(uuid));
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();

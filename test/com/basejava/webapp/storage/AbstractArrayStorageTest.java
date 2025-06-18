@@ -98,20 +98,20 @@ public abstract class AbstractArrayStorageTest {
 
     @org.junit.jupiter.api.Test
     void delete() {
-        storage.delete(RESUME_3);
+        storage.delete(RESUME_3.getUuid());
         assertSize(2);
         assertThrows(NotExistStorageException.class, () -> assertGet(RESUME_3));
     }
 
     @org.junit.jupiter.api.Test
     void deleteNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.delete(RESUME_4));
+        assertThrows(NotExistStorageException.class, () -> storage.delete(RESUME_4.getUuid()));
     }
 
     @org.junit.jupiter.api.Test
     void update() {
         storage.update(RESUME_3);
-        assertSame(RESUME_3, storage.get(RESUME_3));
+        assertSame(RESUME_3, storage.get(RESUME_3.getUuid()));
     }
 
     @org.junit.jupiter.api.Test
@@ -132,7 +132,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     private void assertGet(Resume resume) {
-        assertEquals(resume, storage.get(resume));
+        assertEquals(resume, storage.get(resume.getUuid()));
     }
 
     private void assertSize(int size) {

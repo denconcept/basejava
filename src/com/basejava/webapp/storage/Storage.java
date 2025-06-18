@@ -6,13 +6,13 @@ public interface Storage {
 
     Resume[] getAll();
 
-    Resume get(Resume r);
+    Resume get(String uuid);
 
     int size();
 
     void save(Resume r);
 
-    void delete(Resume r);
+    void delete(String uuid);
 
     void update(Resume r);
 

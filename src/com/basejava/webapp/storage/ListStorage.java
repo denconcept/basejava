@@ -1,7 +1,11 @@
 package com.basejava.webapp.storage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Objects;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public class ListStorage extends AbstractStorage {
@@ -14,9 +18,11 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume get(Resume r) {
-        int index = storage.indexOf(r);
-        notExist(r, index);
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        }
         return storage.get(index);
     }
 
@@ -27,30 +33,49 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public void save(Resume r) {
-        int index = storage.indexOf(r);
-        exist(r, index);
-        storage.addLast(r);
-        printMsg(r.getUuid() + " saved");
+        if (storage.contains(r)) {
+            throw new ExistStorageException(r.getUuid());
+        }
+        storage.add(r);
+        System.out.println(r.getUuid() + " saved");
     }
 
     @Override
-    public void delete(Resume r) {
-        int index = storage.indexOf(r);
-        notExist(r, index);
-        storage.remove(r);
-        printMsg("\n" + r.getUuid() + " deleted");
+    public void delete(String uuid) {
+        Iterator<Resume> iterator = storage.iterator();
+        while (iterator.hasNext()) {
+            Resume r = iterator.next();
+            if (Objects.equals(r.getUuid(), uuid)) {
+                iterator.remove();
+                System.out.println("\n" + uuid + " deleted");
+                return;
+            }
+        }
+        throw new NotExistStorageException(uuid);
     }
 
     @Override
     public void update(Resume r) {
         int index = storage.indexOf(r);
-        notExist(r, index);
+        if (index < 0) {
+            throw new NotExistStorageException(r.getUuid());
+        }
         storage.set(index, r);
-        printMsg("\n" + r.getUuid() + " update successful");
+        System.out.println("\n" + r.getUuid() + " update successful");
     }
 
     @Override
     public void clear() {
         storage.clear();
+    }
+
+    @Override
+    protected int getIndex(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (uuid.equals(storage.get(i).getUuid())) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
