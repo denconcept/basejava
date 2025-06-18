@@ -1,22 +1,60 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    public abstract Resume[] getAll();
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+        return extract(index);
+    }
 
-    public abstract Resume get(String uuid);
+    public void save(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index >= 0) {
+            throw new ExistStorageException(r.getUuid());
+        }
+        add(r, index);
+        System.out.println(r.getUuid() + " saved");
+    }
 
-    public abstract int size();
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+        remove(index);
+        System.out.println("\n" + uuid + " deleted");
+    }
 
-    public abstract void save(Resume r);
+    public void update(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index < 0) {
+            throw new NotExistStorageException(r.getUuid());
+        }
+        set(r, index);
+        System.out.println("\n" + r.getUuid() + " update successful");
+    }
 
-    public abstract void delete(String uuid);
+    public void clear() {
+        reset();
+        System.out.println("\nStorage was cleared");
+    }
 
-    public abstract void update(Resume r);
+    protected abstract Resume extract(int index);
 
-    public abstract void clear();
+    protected abstract void add(Resume r, int index);
+
+    protected abstract void remove(int index);
+
+    protected abstract void set(Resume r, int index);
+
+    protected abstract void reset();
 
     protected abstract int getIndex(String uuid);
 }
