@@ -1,9 +1,9 @@
 package com.basejava.webapp.storage;
 
-class ListStorageTest extends AbstractArrayStorageTest {
+class MapStorageTest extends AbstractArrayStorageTest {
 
-    public ListStorageTest() {
-        super(new ListStorage());
+    public MapStorageTest() {
+        super(new MapStorage());
     }
 
     @Override

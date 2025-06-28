@@ -7,7 +7,7 @@ import com.basejava.webapp.model.Resume;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insert(Resume r, int index) {
+    protected void insert(int index, Resume r) {
         int insertionIndex = -index - 1;
         System.arraycopy(storage, insertionIndex, storage, insertionIndex + 1, size - insertionIndex);
         storage[insertionIndex] = r;
@@ -19,7 +19,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Object getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
