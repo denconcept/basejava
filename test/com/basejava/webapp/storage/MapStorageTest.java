@@ -1,13 +1,13 @@
 package com.basejava.webapp.storage;
 
-class MapStorageTest extends AbstractArrayStorageTest {
+class MapStorageTest extends AbstractStorageTest {
 
-    public MapStorageTest() {
+    protected MapStorageTest() {
         super(new MapStorage());
     }
 
     @Override
-    public void saveStorageOverflow() {
+    protected void saveStorageOverflow() {
         throw new UnsupportedOperationException("unsupported method");
     }
 }
