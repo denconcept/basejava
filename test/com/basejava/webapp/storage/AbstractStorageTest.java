@@ -6,17 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class AbstractStorageTest {
 
-    private final Storage storage;
+    protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -82,19 +80,6 @@ public abstract class AbstractStorageTest {
     @org.junit.jupiter.api.Test
     void saveExist() {
         assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
-    }
-
-    @org.junit.jupiter.api.Test
-    void saveOverflow() {
-        storage.clear();
-        try {
-            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException e) {
-            fail("Переполнение произошло раньше времени!");
-        }
-        assertThrows(StorageException.class, () -> storage.save(new Resume()));
     }
 
     @org.junit.jupiter.api.Test
