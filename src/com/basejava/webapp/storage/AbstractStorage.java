@@ -1,38 +1,55 @@
 package com.basejava.webapp.storage;
 
+import java.util.Comparator;
+import java.util.List;
+
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> resumes = getAll();
+        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        return resumes;
+    }
+
+    @Override
     public Resume get(String uuid) {
         Object searchKey = getExistingSearchKey(uuid);
         return doGet(searchKey);
     }
 
+    @Override
     public void save(Resume r) {
         Object searchKey = getNotExistingSearchKey(r.getUuid());
         doSave(searchKey, r);
         System.out.println(r.getUuid() + " saved");
     }
 
+    @Override
     public void delete(String uuid) {
         Object searchKey = getExistingSearchKey(uuid);
         doDelete(searchKey);
         System.out.println("\n" + uuid + " deleted");
     }
 
+    @Override
     public void update(Resume r) {
         Object searchKey = getExistingSearchKey(r.getUuid());
         doUpdate(searchKey, r);
         System.out.println("\n" + r.getUuid() + " update successful");
     }
 
+    @Override
     public void clear() {
         doClear();
         System.out.println("\nStorage was cleared");
     }
+
+    protected abstract List<Resume> getAll();
 
     protected abstract Resume doGet(Object searchKey);
 

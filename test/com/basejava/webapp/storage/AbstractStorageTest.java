@@ -1,5 +1,7 @@
 package com.basejava.webapp.storage;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 
 import com.basejava.webapp.exception.ExistStorageException;
@@ -7,7 +9,6 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,10 +28,10 @@ public abstract class AbstractStorageTest {
     protected static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1);
-        RESUME_2 = new Resume(UUID_2);
-        RESUME_3 = new Resume(UUID_3);
-        RESUME_4 = new Resume(UUID_4);
+        RESUME_1 = new Resume(UUID_1, "Ann Ann");
+        RESUME_2 = new Resume(UUID_2, "Brian Brian");
+        RESUME_3 = new Resume(UUID_3, "Carter Carter");
+        RESUME_4 = new Resume(UUID_4, "Duke Duke");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -50,7 +51,7 @@ public abstract class AbstractStorageTest {
 
     @org.junit.jupiter.api.Test
     void getAll() {
-        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
+        List<Resume> expected = List.of(RESUME_1, RESUME_2, RESUME_3);
         assertGetAll(expected);
     }
 
@@ -84,7 +85,7 @@ public abstract class AbstractStorageTest {
     }
 
     @org.junit.jupiter.api.Test
-    void saveStorageOverflow() {
+    void saveOverflow() {
         storage.clear();
         try {
             for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
@@ -123,12 +124,12 @@ public abstract class AbstractStorageTest {
     void clear() {
         storage.clear();
         assertSize(0);
-        Resume[] resumes = {};
+        List<Resume> resumes = new ArrayList<>();
         assertGetAll(resumes);
     }
 
-    private void assertGetAll(Resume[] resumes) {
-        assertArrayEquals(resumes, storage.getAll());
+    private void assertGetAll(List<Resume> resumes) {
+        assertEquals(resumes, storage.getAllSorted());
     }
 
     private void assertGet(Resume r) {

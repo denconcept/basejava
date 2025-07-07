@@ -3,6 +3,7 @@ package com.basejava.webapp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
@@ -35,12 +36,12 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume(uuid);
+                    r = new Resume(uuid, "Ann Ann");
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "update":
-                    r = new Resume(uuid);
+                    r = new Resume(uuid, "Brian Brian");
                     ARRAY_STORAGE.update(r);
                     printAll();
                     break;
@@ -65,9 +66,9 @@ public class MainArray {
     }
 
     static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.isEmpty()) {
             System.out.println("Empty");
         } else {
             for (Resume r : all) {

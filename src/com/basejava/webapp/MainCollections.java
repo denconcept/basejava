@@ -12,13 +12,13 @@ import com.basejava.webapp.model.Resume;
 public class MainCollections {
 
     private static final String UUID_1 = "uuid1";
-    protected static final Resume RESUME_1 = new Resume(UUID_1);
+    protected static final Resume RESUME_1 = new Resume(UUID_1, "Ann Ann");
     private static final String UUID_2 = "uuid2";
-    protected static final Resume RESUME_2 = new Resume(UUID_2);
+    protected static final Resume RESUME_2 = new Resume(UUID_2, "Brian Brian");
     private static final String UUID_3 = "uuid3";
-    protected static final Resume RESUME_3 = new Resume(UUID_3);
+    protected static final Resume RESUME_3 = new Resume(UUID_3, "Carter Carter");
     private static final String UUID_4 = "uuid4";
-    protected static final Resume RESUME_4 = new Resume(UUID_4);
+    protected static final Resume RESUME_4 = new Resume(UUID_4, "Duke Duke");
 
     public static void main(String[] args) {
         Collection<Resume> collection = new ArrayList<>();

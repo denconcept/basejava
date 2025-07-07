@@ -7,7 +7,7 @@ class MapStorageTest extends AbstractStorageTest {
     }
 
     @Override
-    protected void saveStorageOverflow() {
+    protected void saveOverflow() {
         throw new UnsupportedOperationException("unsupported method");
     }
 }

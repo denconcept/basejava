@@ -7,7 +7,7 @@ class ListStorageTest extends AbstractStorageTest {
     }
 
     @Override
-    public void saveStorageOverflow() {
+    public void saveOverflow() {
         throw new UnsupportedOperationException("unsupported method");
     }
 }

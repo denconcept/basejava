@@ -1,6 +1,8 @@
 package com.basejava.webapp.storage;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.basejava.webapp.model.Resume;
@@ -10,8 +12,8 @@ public class MapStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
+    public List<Resume> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
