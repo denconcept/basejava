@@ -12,7 +12,7 @@ public class MapUuidStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
-    public List<Resume> getAll() {
+    public List<Resume> doCopyAll() {
         return new ArrayList<>(storage.values());
     }
 

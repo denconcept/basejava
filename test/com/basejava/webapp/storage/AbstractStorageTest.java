@@ -26,10 +26,10 @@ public abstract class AbstractStorageTest {
     protected static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "Ann Ann");
-        RESUME_2 = new Resume(UUID_2, "Brian Brian");
-        RESUME_3 = new Resume(UUID_3, "Carter Carter");
-        RESUME_4 = new Resume(UUID_4, "Duke Duke");
+        RESUME_1 = new Resume(UUID_1, "Name1");
+        RESUME_2 = new Resume(UUID_2, "Name2");
+        RESUME_3 = new Resume(UUID_3, "Name3");
+        RESUME_4 = new Resume(UUID_4, "Name4");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -48,9 +48,9 @@ public abstract class AbstractStorageTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getAll() {
-        List<Resume> expected = List.of(RESUME_1, RESUME_2, RESUME_3);
-        assertGetAll(expected);
+    void getAllSorted() {
+        List<Resume> resumes = List.of(RESUME_1, RESUME_2, RESUME_3);
+        assertGetAll(resumes);
     }
 
     @org.junit.jupiter.api.Test
@@ -96,8 +96,9 @@ public abstract class AbstractStorageTest {
 
     @org.junit.jupiter.api.Test
     void update() {
-        storage.update(RESUME_3);
-        assertSame(RESUME_3, storage.get(RESUME_3.getUuid()));
+        Resume newResume = new Resume(UUID_3, "New Resume");
+        storage.update(newResume);
+        assertSame(newResume, storage.get(RESUME_3.getUuid()));
     }
 
     @org.junit.jupiter.api.Test

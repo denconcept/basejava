@@ -14,7 +14,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = getAll();
+        List<Resume> resumes = doCopyAll();
         resumes.sort(RESUME_COMPARATOR);
         return resumes;
     }
@@ -52,7 +52,7 @@ public abstract class AbstractStorage implements Storage {
         System.out.println("\nStorage was cleared");
     }
 
-    protected abstract List<Resume> getAll();
+    protected abstract List<Resume> doCopyAll();
 
     protected abstract Resume doGet(Object searchKey);
 
