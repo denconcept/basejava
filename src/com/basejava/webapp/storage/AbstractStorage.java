@@ -8,7 +8,7 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
-public abstract class AbstractStorage<SearchKeyT> implements Storage {
+public abstract class AbstractStorage<SKT> implements Storage {
 
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
@@ -16,6 +16,7 @@ public abstract class AbstractStorage<SearchKeyT> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> resumes = doCopyAll();
         resumes.sort(RESUME_COMPARATOR);
         return resumes;
@@ -23,29 +24,30 @@ public abstract class AbstractStorage<SearchKeyT> implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        SearchKeyT searchKey = getExistingSearchKey(uuid);
+        LOG.info("Get " + uuid);
+        SKT searchKey = getExistingSearchKey(uuid);
         return doGet(searchKey);
     }
 
     @Override
     public void save(Resume r) {
-        SearchKeyT searchKey = getNotExistingSearchKey(r.getUuid());
+        LOG.info("Save " + r);
+        SKT searchKey = getNotExistingSearchKey(r.getUuid());
         doSave(searchKey, r);
-        System.out.println(r.getUuid() + " saved");
     }
 
     @Override
     public void delete(String uuid) {
-        SearchKeyT searchKey = getExistingSearchKey(uuid);
+        LOG.info("Delete " + uuid);
+        SKT searchKey = getExistingSearchKey(uuid);
         doDelete(searchKey);
-        System.out.println("\n" + uuid + " deleted");
     }
 
     @Override
     public void update(Resume r) {
-        SearchKeyT searchKey = getExistingSearchKey(r.getUuid());
+        LOG.info("Update " + r);
+        SKT searchKey = getExistingSearchKey(r.getUuid());
         doUpdate(searchKey, r);
-        System.out.println("\n" + r.getUuid() + " update successful");
     }
 
     @Override
@@ -56,31 +58,33 @@ public abstract class AbstractStorage<SearchKeyT> implements Storage {
 
     protected abstract List<Resume> doCopyAll();
 
-    protected abstract Resume doGet(SearchKeyT searchKey);
+    protected abstract Resume doGet(SKT searchKey);
 
-    protected abstract void doSave(SearchKeyT searchKey, Resume r);
+    protected abstract void doSave(SKT searchKey, Resume r);
 
-    protected abstract void doDelete(SearchKeyT searchKey);
+    protected abstract void doDelete(SKT searchKey);
 
-    protected abstract void doUpdate(SearchKeyT searchKey, Resume r);
+    protected abstract void doUpdate(SKT searchKey, Resume r);
 
     protected abstract void doClear();
 
-    protected abstract SearchKeyT getSearchKey(String uuid);
+    protected abstract SKT getSearchKey(String uuid);
 
-    protected abstract boolean isExist(SearchKeyT searchKey);
+    protected abstract boolean isExist(SKT searchKey);
 
-    private SearchKeyT getExistingSearchKey(String uuid) {
-        SearchKeyT searchKey = getSearchKey(uuid);
+    private SKT getExistingSearchKey(String uuid) {
+        SKT searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private SearchKeyT getNotExistingSearchKey(String uuid) {
-        SearchKeyT searchKey = getSearchKey(uuid);
+    private SKT getNotExistingSearchKey(String uuid) {
+        SKT searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return searchKey;
