@@ -2,13 +2,15 @@ package com.basejava.webapp.storage;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SearchKeyT> implements Storage {
 
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
 
@@ -21,27 +23,27 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        Object searchKey = getExistingSearchKey(uuid);
+        SearchKeyT searchKey = getExistingSearchKey(uuid);
         return doGet(searchKey);
     }
 
     @Override
     public void save(Resume r) {
-        Object searchKey = getNotExistingSearchKey(r.getUuid());
+        SearchKeyT searchKey = getNotExistingSearchKey(r.getUuid());
         doSave(searchKey, r);
         System.out.println(r.getUuid() + " saved");
     }
 
     @Override
     public void delete(String uuid) {
-        Object searchKey = getExistingSearchKey(uuid);
+        SearchKeyT searchKey = getExistingSearchKey(uuid);
         doDelete(searchKey);
         System.out.println("\n" + uuid + " deleted");
     }
 
     @Override
     public void update(Resume r) {
-        Object searchKey = getExistingSearchKey(r.getUuid());
+        SearchKeyT searchKey = getExistingSearchKey(r.getUuid());
         doUpdate(searchKey, r);
         System.out.println("\n" + r.getUuid() + " update successful");
     }
@@ -54,30 +56,30 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract List<Resume> doCopyAll();
 
-    protected abstract Resume doGet(Object searchKey);
+    protected abstract Resume doGet(SearchKeyT searchKey);
 
-    protected abstract void doSave(Object searchKey, Resume r);
+    protected abstract void doSave(SearchKeyT searchKey, Resume r);
 
-    protected abstract void doDelete(Object searchKey);
+    protected abstract void doDelete(SearchKeyT searchKey);
 
-    protected abstract void doUpdate(Object searchKey, Resume r);
+    protected abstract void doUpdate(SearchKeyT searchKey, Resume r);
 
     protected abstract void doClear();
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract SearchKeyT getSearchKey(String uuid);
 
-    protected abstract boolean isExist(Object searchKey);
+    protected abstract boolean isExist(SearchKeyT searchKey);
 
-    private Object getExistingSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private SearchKeyT getExistingSearchKey(String uuid) {
+        SearchKeyT searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
     }
 
-    private Object getNotExistingSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private SearchKeyT getNotExistingSearchKey(String uuid) {
+        SearchKeyT searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
         }
