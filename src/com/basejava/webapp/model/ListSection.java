@@ -1,16 +1,36 @@
 package com.basejava.webapp.model;
 
 import java.util.List;
+import java.util.Objects;
 
-public class ListSection implements Section {
+public class ListSection extends AbstractSection {
 
-    private List<String> content;
+    private final List<String> description;
 
-    public List<String> getContent() {
-        return content;
+    public ListSection(List<String> description) {
+        this.description = description;
     }
 
-    public void setContent(List<String> content) {
-        this.content = content;
+    public List<String> getDescription() {
+        return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ListSection that = (ListSection) o;
+        return Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(description);
+    }
+
+    @Override
+    public String toString() {
+        return "ListSection{" +
+                "description=" + description +
+                '}';
     }
 }

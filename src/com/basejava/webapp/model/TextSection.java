@@ -1,14 +1,35 @@
 package com.basejava.webapp.model;
 
-public class TextSection implements Section {
+import java.util.Objects;
 
-    private String content;
+public class TextSection extends AbstractSection {
 
-    public String getContent() {
-        return content;
+    private final String description;
+
+    public TextSection(String description) {
+        this.description = description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TextSection that = (TextSection) o;
+        return Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(description);
+    }
+
+    @Override
+    public String toString() {
+        return "TextSection{" +
+                "description='" + description + '\'' +
+                '}';
     }
 }

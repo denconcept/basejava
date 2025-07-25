@@ -9,17 +9,11 @@ public class Resume implements Comparable<Resume> {
 
     private final String uuid;
     private final String fullName;
-    public final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-    public final Map<Contacts, String> contacts = new EnumMap<>(Contacts.class);
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
-        sections.put(SectionType.PERSONAL, new TextSection());
-        sections.put(SectionType.OBJECTIVE, new TextSection());
-        sections.put(SectionType.ACHIEVEMENT, new ListSection());
-        sections.put(SectionType.QUALIFICATIONS, new ListSection());
-        sections.put(SectionType.EXPERIENCE, new StageSection());
-        sections.put(SectionType.EDUCATION, new StageSection());
     }
 
     public Resume(String uuid, String fullName) {
@@ -35,6 +29,22 @@ public class Resume implements Comparable<Resume> {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
+    }
+
+    public void addContact(ContactType contactType, String value) {
+        contacts.put(contactType, value);
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return Map.copyOf(sections);
+    }
+
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
     }
 
     @Override
@@ -60,13 +70,5 @@ public class Resume implements Comparable<Resume> {
     public int compareTo(Resume o) {
         int cmp = fullName.compareTo(o.fullName);
         return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
-    }
-
-    public void addContact(Contacts type, String value) {
-        contacts.put(type, value);
-    }
-
-    public String getContact(Contacts type) {
-        return contacts.get(type);
     }
 }

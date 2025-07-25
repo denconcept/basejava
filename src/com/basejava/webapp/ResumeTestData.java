@@ -2,12 +2,13 @@ package com.basejava.webapp;
 
 import java.util.Arrays;
 
-import com.basejava.webapp.model.Block;
-import com.basejava.webapp.model.Contacts;
+import com.basejava.webapp.model.Company;
+import com.basejava.webapp.model.CompanySection;
+import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.ListSection;
+import com.basejava.webapp.model.Period;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.SectionType;
-import com.basejava.webapp.model.StageSection;
 import com.basejava.webapp.model.TextSection;
 
 public class ResumeTestData {
@@ -17,7 +18,39 @@ public class ResumeTestData {
         System.out.println("\n" + resume.getFullName() + "\n");
 
         // Contacts
-        String[] contactsData = {
+        String[] contacts = getContacts();
+        for (int i = 0; i < ContactType.values().length; i++) {
+            resume.addContact(ContactType.values()[i], contacts[i]);
+            System.out.println(ContactType.values()[i].getTitle() +
+                    resume.getContact(ContactType.values()[i]));
+        }
+
+        // Objective, Personal
+        String[] textContent = getTexts();
+        for (int i = 0; i < textContent.length; i++) {
+            createTextSection(resume, textContent[i], SectionType.values()[i]);
+            printTextSection(resume, SectionType.values()[i]);
+        }
+
+        // Achievements
+        resume.addSection(SectionType.ACHIEVEMENT, getAchievements());
+        printListSection(resume, SectionType.ACHIEVEMENT);
+
+        // Qualifications
+        resume.addSection(SectionType.QUALIFICATIONS, getQualifications());
+        printListSection(resume, SectionType.QUALIFICATIONS);
+
+        // Experience
+        createCompanySection(resume, getExperience(), SectionType.EXPERIENCE);
+        printCompanySection(resume, SectionType.EXPERIENCE);
+
+        // Education
+        createCompanySection(resume, getEducation(), SectionType.EDUCATION);
+        printCompanySection(resume, SectionType.EDUCATION);
+    }
+
+    private static String[] getContacts() {
+        return new String[] {
                 "+7 (921) 855-0482",
                 "skype:grigory.kislin",
                 "gkislin@yandex.ru",
@@ -26,24 +59,27 @@ public class ResumeTestData {
                 "",
                 ""
         };
-        for (int i = 0; i < Contacts.values().length; i++) {
-            resume.addContact(Contacts.values()[i], contactsData[i]);
-            System.out.println(Contacts.values()[i].getTitle() + resume.getContact(Contacts.values()[i]));
-        }
+    }
 
-        // TextSections
-        String[] textContent = {
+    private static String[] getTexts() {
+        return new String[] {
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям",
                 "Аналитический склад ума, сильная логика, креативность, инициативность. " +
                         "Пурист кода и архитектуры."
         };
-        for (int i = 0; i < textContent.length; i++) {
-            ((TextSection) resume.sections.get(SectionType.values()[i])).setContent(textContent[i]);
-            System.out.println("\n\n" + SectionType.values()[i].getTitle());
-            System.out.println(((TextSection) resume.sections.get(SectionType.values()[i])).getContent());
-        }
+    }
 
-        // ListSection ACHIEVEMENT
+    private static void createTextSection(Resume resume, String textContent, SectionType type) {
+        TextSection textSection = new TextSection(textContent);
+        resume.addSection(type, textSection);
+    }
+
+    private static void printTextSection(Resume resume, SectionType type) {
+        System.out.println("\n\n" + type.getTitle());
+        System.out.println(((TextSection) resume.getSections().get(type)).getDescription());
+    }
+
+    private static ListSection getAchievements() {
         String[] achievement = {
                 "– Организация команды и успешная реализация Java проектов для сторонних заказчиков: " +
                         "приложения автопарк на стеке Spring Cloud/микросервисы, " +
@@ -77,13 +113,10 @@ public class ResumeTestData {
                         "(Cyberplat, Eport, Chronopay, Сбербанк), " +
                         "Белоруcсии(Erip, Osmp) и Никарагуа."
         };
-        ((ListSection) resume.sections.get(SectionType.ACHIEVEMENT)).setContent(Arrays.asList(achievement));
-        System.out.println("\n\n" + SectionType.ACHIEVEMENT.getTitle());
-        for (String item : ((ListSection) resume.sections.get(SectionType.ACHIEVEMENT)).getContent()) {
-            System.out.println(item);
-        }
+        return new ListSection(Arrays.asList(achievement));
+    }
 
-        // ListSection QUALIFICATIONS
+    private static ListSection getQualifications() {
         String[] qualifications = {
                 "– JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                 "– Version control: Subversion, Git, Mercury, ClearCase, Perforce",
@@ -108,22 +141,25 @@ public class ResumeTestData {
                         "проектрирования, архитектурных шаблонов, UML, функционального программирования",
                 "– Родной русский, английский \"upper intermediate\""
         };
-        ((ListSection) resume.sections.get(SectionType.QUALIFICATIONS))
-                .setContent(Arrays.asList(qualifications));
-        System.out.println("\n\n" + SectionType.QUALIFICATIONS.getTitle());
-        for (String item : ((ListSection) resume.sections.get(SectionType.QUALIFICATIONS)).getContent()) {
+        return new ListSection(Arrays.asList(qualifications));
+    }
+
+    private static void printListSection(Resume resume, SectionType type) {
+        System.out.println("\n\n" + type.getTitle());
+        for (String item : ((ListSection) resume.getSections().get(type)).getDescription()) {
             System.out.println(item);
         }
+    }
 
-        // StageSection EXPERIENCE
-        String[][] experience = {
-                {"– Java Online Projects", "Автор проекта.", "10/2013 - Сейчас",
-                        "Создание, организация и проведение Java онлайн проектов и стажировок.\n"},
-                {"– Wrike", "Старший разработчик (backend)", "10/2014 - 01/2016",
-                        "Проектирование и разработка онлайн платформы управления проектами Wrike " +
+    private static String[][] getExperience() {
+        return new String[][] {
+                {"– Java Online Projects", "10/2013", "Сейчас", "Автор проекта.",
+                        "Создание, организация и проведение Java онлайн проектов и стажировок."},
+                {"\n\n– Wrike", "10/2014", "01/2016", "Старший разработчик (backend).",
+                        "Проектирование и разработка онлайн платформы управления проектами Wrike" +
                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis)." +
-                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.\n"},
-                {"– RIT Center", "Java архитектор", "04/2012 - 10/2014",
+                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."},
+                {"\n\n– RIT Center", "04/2012", "10/2014", "Java архитектор.",
                         "Организация процесса разработки системы ERP для разных окружений: " +
                                 "релизная политика, версионирование, ведение CI (Jenkins), " +
                                 "миграция базы (кастомизация Flyway), конфигурирование системы " +
@@ -133,74 +169,76 @@ public class ResumeTestData {
                                 "Интеграция Alfresco JLAN для online редактирование из браузера " +
                                 "документов MS Office. Maven + plugin development, Ant, Apache Commons, " +
                                 "Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python " +
-                                "scripting, Unix shell remote scripting via ssh tunnels, PL/Python\n"},
-                {"– Luxoft (Deutsche Bank)", "Ведущий программист", "12/2010 - 04/2012",
+                                "scripting, Unix shell remote scripting via ssh tunnels, PL/Python"},
+                {"\n\n– Luxoft (Deutsche Bank)", "12/2010", "04/2012", "Ведущий программист.",
                         "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, " +
                                 "Spring MVC, SmartGWT, GWT, Jasper, Oracle). " +
                                 "Реализация клиентской и серверной части CRM." +
                                 "Реализация RIA-приложения для администрирования, " +
                                 "мониторинга и анализа результатов в области алгоритмического трейдинга. " +
-                                "JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.\n"},
-                {"– Yota", "Ведущий специалист", "06/2008 - 12/2010",
+                                "JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."},
+                {"\n\n– Yota", "06/2008", "12/2010", "Ведущий специалист.",
                         "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" " +
                                 "(GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4," +
                                 "JSP, JMX, JMS, Maven2). Реализация администрирования, статистики " +
                                 "и мониторинга фреймворка. Разработка online JMX клиента " +
-                                "(Python/ Jython, Django, ExtJS)\n"},
-                {"– Enkata", "Разработчик ПО", "03/2007 - 06/2008",
+                                "(Python/ Jython, Django, ExtJS)"},
+                {"\n\n– Enkata", "03/2007", "06/2008", "Разработчик ПО.",
                         "Реализация клиентской (Eclipse RCP) и серверной " +
                                 "(JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного " +
-                                "J2EE приложения (OLAP, Data mining).\n"},
-                {"– Siemens AG", "Разработчик ПО", "01/2005 - 02/2007",
+                                "J2EE приложения (OLAP, Data mining)."},
+                {"\n\n– Siemens AG", "01/2005", "02/2007", "Разработчик ПО.",
                         "Разработка информационной модели, проектирование интерфейсов, " +
-                        "реализация и отладка ПО на мобильной IN платформе Siemens " +
-                        "@vantage (Java, Unix).\n"},
-                {"– Alcatel", "Инженер по аппаратному и программному тестированию", "09/1997 - 01/2005",
-                        "Создание, организация и проведение Java онлайн проектов и стажировок."},
+                                "реализация и отладка ПО на мобильной IN платформе Siemens " +
+                                "@vantage (Java, Unix)."},
+                {"\n\n– Alcatel", "09/1997", "01/2005", "Инженер по аппаратному и программному тестированию.",
+                        "Создание, организация и проведение Java онлайн проектов и стажировок.\n"}
         };
-        System.out.println("\n\n" + SectionType.EXPERIENCE.getTitle());
-        for (String[] strings : experience) {
-            Block block = new Block();
-            block.setTitle(strings[0]);
-            block.setSubTitle(strings[1]);
-            block.setDate(strings[2]);
-            block.setContent(strings[3]);
-            ((StageSection) resume.sections.get(SectionType.EXPERIENCE)).blocks.add(block);
-        }
-        for (Block item : ((StageSection) resume.sections.get(SectionType.EXPERIENCE)).blocks) {
-            System.out.println(item.getTitle());
-            System.out.println(item.getSubTitle());
-            System.out.println(item.getDate());
-            System.out.println(item.getContent());
-        }
+    }
 
-        // StageSection EDUCATION
-        String[][] education = {
-                {"– Coursera", "'Functional Programming Principles in Scala' by Martin Odersky",
-                        "03/2013 - 05/2013\n"},
-                {"– Luxoft", "Курс 'Объектно-ориентированный анализ ИС. " +
-                        "Концептуальное моделирование на UML.'", "03/2011 - 04/2011\n"},
-                {"– Siemens AG", "3 месяца обучения мобильным IN сетям (Берлин)",
-                        "01/2005 - 04/2005\n"},
-                {"– Alcatel", "6 месяцев обучения цифровым телефонным сетям (Москва)",
-                        "09/1997 - 03/1998\n"},
-                {"– Санкт-Петербургский национальный исследовательский университет информационных" +
-                        "технологий, механики и оптики", "Инженер (программист Fortran, C) Аспирантура" +
-                        "(программист С, С++)", "09/1987 - 07/1993 09/1993 - 07/1996\n"},
-                {"– Заочная физико-техническая школа при МФТИ", "Закончил с отличием", "09/1984 - 06/1987"},
+    private static String[][] getEducation() {
+        return new String[][] {
+                {"– Coursera", "03/2013", "05/2013",
+                        "'Functional Programming Principles in Scala' by Martin Odersky", ""},
+                {"\n– Luxoft", "03/2011", "04/2011",
+                        "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'",
+                        ""},
+                {"\n– Siemens AG", "01/2005", "04/2005",
+                        "3 месяца обучения мобильным IN сетям (Берлин)", ""},
+                {"\n– Alcatel", "09/1997", "03/1998",
+                        "6 месяцев обучения цифровым телефонным сетям (Москва)", ""},
+                {"\n– Санкт-Петербургский национальный исследовательский университет" +
+                        "информационных технологий, механики и оптики",
+                        "09/1993", "07/1996", "Аспирантура (программист С, С++)", "",
+                        "09/1987", "07/1993", "Инженер (программист Fortran, C)", ""},
+                {"\n– Заочная физико-техническая школа при МФТИ", "09/1984", "06/1987",
+                        "Закончил с отличием", ""},
         };
-        System.out.println("\n\n" + SectionType.EDUCATION.getTitle());
-        for (String[] strings : education) {
-            Block block = new Block();
-            block.setTitle(strings[0]);
-            block.setSubTitle(strings[1]);
-            block.setDate(strings[2]);
-            ((StageSection) resume.sections.get(SectionType.EDUCATION)).blocks.add(block);
+    }
+
+    private static void createCompanySection(Resume resume, String[][] companies, SectionType type) {
+        CompanySection companySection = new CompanySection();
+        for (String[] items : companies) {
+            Company company = new Company(items[0]);
+            for (int i = 0; items.length - i != 1; i += 4) {
+                Period period = new Period(items[i + 1], items[i + 2], items[i + 3], items[i + 4]);
+                company.setPeriod(period);
+            }
+            companySection.addCompany(company);
         }
-        for (Block item : ((StageSection) resume.sections.get(SectionType.EDUCATION)).blocks) {
-            System.out.println(item.getTitle());
-            System.out.println(item.getSubTitle());
-            System.out.println(item.getDate());
+        resume.addSection(type, companySection);
+    }
+
+    private static void printCompanySection(Resume resume, SectionType type) {
+        System.out.println("\n\n" + type.getTitle());
+        for (Company company : ((CompanySection) resume.getSections()
+                .get(type)).getCompanies()) {
+            System.out.println(company.getTitle());
+            for (Period period : company.getPeriods()) {
+                System.out.print(period.getPeriod());
+                System.out.println(period.getTitle());
+                System.out.print(period.getDescription());
+            }
         }
     }
 }

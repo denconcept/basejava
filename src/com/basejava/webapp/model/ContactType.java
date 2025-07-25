@@ -1,6 +1,6 @@
 package com.basejava.webapp.model;
 
-public enum Contacts {
+public enum ContactType {
 
     PHONE("Тел.: "),
     SKYPE("Skype: "),
@@ -8,11 +8,11 @@ public enum Contacts {
     LINKEDIN("Профиль LinkedIn"),
     GITHUB("Профиль GitHub"),
     STACKOVERFLOW("Профиль StackOverflow"),
-    HOME("Домашняя");
+    HOME("Домашняя страница");
 
     private final String title;
 
-    Contacts(String title) {
+    ContactType(String title) {
         this.title = title;
     }
 
