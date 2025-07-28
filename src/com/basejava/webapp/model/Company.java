@@ -6,15 +6,16 @@ import java.util.Objects;
 
 public class Company {
 
-    private final String title;
+    private final Link homePage;
     private final List<Period> periods = new ArrayList<>();
 
-    public Company(String title) {
-        this.title = title;
+    public Company(String title, String url) {
+        Objects.requireNonNull(title, "title must not be null");
+        this.homePage = new Link(title, url);
     }
 
-    public String getTitle() {
-        return title;
+    public Link getHomePage() {
+        return homePage;
     }
 
     public List<Period> getPeriods() {
@@ -29,20 +30,18 @@ public class Company {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Company company = (Company) o;
-        return Objects.equals(title, company.title) && periods.equals(company.periods);
+        return Objects.equals(homePage, company.homePage) && Objects.equals(periods, company.periods);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(title);
-        result = 31 * result + periods.hashCode();
-        return result;
+        return Objects.hash(homePage, periods);
     }
 
     @Override
     public String toString() {
         return "Company{" +
-                "title='" + title + '\'' +
+                "homePage=" + homePage +
                 ", periods=" + periods +
                 '}';
     }

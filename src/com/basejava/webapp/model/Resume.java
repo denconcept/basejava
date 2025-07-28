@@ -31,16 +31,16 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public String getContact(ContactType contactType) {
-        return contacts.get(contactType);
+    public String getContact(ContactType type) {
+        return contacts.get(type);
     }
 
     public void addContact(ContactType contactType, String value) {
         contacts.put(contactType, value);
     }
 
-    public Map<SectionType, AbstractSection> getSections() {
-        return Map.copyOf(sections);
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
     }
 
     public void addSection(SectionType type, AbstractSection section) {
@@ -51,19 +51,25 @@ public class Resume implements Comparable<Resume> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName) &&
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        int result = uuid.hashCode();
-        result = 31 * result + fullName.hashCode();
-        return result;
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override
     public String toString() {
-        return uuid + '(' + fullName + ')';
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", contacts=" + contacts +
+                ", sections=" + sections +
+                '}';
     }
 
     @Override

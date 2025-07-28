@@ -2,13 +2,14 @@ package com.basejava.webapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CompanySection extends AbstractSection {
 
     private final List<Company> companies = new ArrayList<>();
 
     public List<Company> getCompanies() {
-        return companies;
+        return new ArrayList<>(companies);
     }
 
     public void addCompany(Company company) {
@@ -18,14 +19,13 @@ public class CompanySection extends AbstractSection {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-
         CompanySection that = (CompanySection) o;
-        return companies.equals(that.companies);
+        return Objects.equals(companies, that.companies);
     }
 
     @Override
     public int hashCode() {
-        return companies.hashCode();
+        return Objects.hashCode(companies);
     }
 
     @Override

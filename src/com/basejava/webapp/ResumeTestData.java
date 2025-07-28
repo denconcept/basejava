@@ -76,7 +76,7 @@ public class ResumeTestData {
 
     private static void printTextSection(Resume resume, SectionType type) {
         System.out.println("\n\n" + type.getTitle());
-        System.out.println(((TextSection) resume.getSections().get(type)).getDescription());
+        System.out.println(((TextSection) resume.getSection(type)).getDescription());
     }
 
     private static ListSection getAchievements() {
@@ -146,20 +146,20 @@ public class ResumeTestData {
 
     private static void printListSection(Resume resume, SectionType type) {
         System.out.println("\n\n" + type.getTitle());
-        for (String item : ((ListSection) resume.getSections().get(type)).getDescription()) {
+        for (String item : ((ListSection) resume.getSection(type)).getDescription()) {
             System.out.println(item);
         }
     }
 
     private static String[][] getExperience() {
         return new String[][] {
-                {"– Java Online Projects", "10/2013", "Сейчас", "Автор проекта.",
+                {"– Java Online Projects", "https://javaops.ru", "10/2013", "Сейчас", "Автор проекта.",
                         "Создание, организация и проведение Java онлайн проектов и стажировок."},
-                {"\n\n– Wrike", "10/2014", "01/2016", "Старший разработчик (backend).",
+                {"\n\n– Wrike", "https://www.wrike.com", "10/2014", "01/2016", "Старший разработчик (backend).",
                         "Проектирование и разработка онлайн платформы управления проектами Wrike" +
                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis)." +
                                 "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."},
-                {"\n\n– RIT Center", "04/2012", "10/2014", "Java архитектор.",
+                {"\n\n– RIT Center", "https://www.ritcenter.com", "04/2012", "10/2014", "Java архитектор.",
                         "Организация процесса разработки системы ERP для разных окружений: " +
                                 "релизная политика, версионирование, ведение CI (Jenkins), " +
                                 "миграция базы (кастомизация Flyway), конфигурирование системы " +
@@ -170,48 +170,50 @@ public class ResumeTestData {
                                 "документов MS Office. Maven + plugin development, Ant, Apache Commons, " +
                                 "Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python " +
                                 "scripting, Unix shell remote scripting via ssh tunnels, PL/Python"},
-                {"\n\n– Luxoft (Deutsche Bank)", "12/2010", "04/2012", "Ведущий программист.",
+                {"\n\n– Luxoft (Deutsche Bank)", "https://luxoft.ru", "12/2010", "04/2012", "Ведущий программист.",
                         "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, " +
                                 "Spring MVC, SmartGWT, GWT, Jasper, Oracle). " +
                                 "Реализация клиентской и серверной части CRM." +
                                 "Реализация RIA-приложения для администрирования, " +
                                 "мониторинга и анализа результатов в области алгоритмического трейдинга. " +
                                 "JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."},
-                {"\n\n– Yota", "06/2008", "12/2010", "Ведущий специалист.",
+                {"\n\n– Yota", "https://www.yota.ru", "06/2008", "12/2010", "Ведущий специалист.",
                         "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" " +
                                 "(GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4," +
                                 "JSP, JMX, JMS, Maven2). Реализация администрирования, статистики " +
                                 "и мониторинга фреймворка. Разработка online JMX клиента " +
                                 "(Python/ Jython, Django, ExtJS)"},
-                {"\n\n– Enkata", "03/2007", "06/2008", "Разработчик ПО.",
+                {"\n\n– Enkata", "https://www.enkata.ru", "03/2007", "06/2008", "Разработчик ПО.",
                         "Реализация клиентской (Eclipse RCP) и серверной " +
                                 "(JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного " +
                                 "J2EE приложения (OLAP, Data mining)."},
-                {"\n\n– Siemens AG", "01/2005", "02/2007", "Разработчик ПО.",
+                {"\n\n– Siemens AG", "https://www.siemens.com", "01/2005", "02/2007", "Разработчик ПО.",
                         "Разработка информационной модели, проектирование интерфейсов, " +
                                 "реализация и отладка ПО на мобильной IN платформе Siemens " +
                                 "@vantage (Java, Unix)."},
-                {"\n\n– Alcatel", "09/1997", "01/2005", "Инженер по аппаратному и программному тестированию.",
+                {"\n\n– Alcatel", "https://www.alcatel.ru", "09/1997", "01/2005",
+                        "Инженер по аппаратному и программному тестированию.",
                         "Создание, организация и проведение Java онлайн проектов и стажировок.\n"}
         };
     }
 
     private static String[][] getEducation() {
         return new String[][] {
-                {"– Coursera", "03/2013", "05/2013",
+                {"– Coursera", "https://www.coursera.org", "03/2013", "05/2013",
                         "'Functional Programming Principles in Scala' by Martin Odersky", ""},
-                {"\n– Luxoft", "03/2011", "04/2011",
+                {"\n– Luxoft", "https://luxoft.ru", "03/2011", "04/2011",
                         "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'",
                         ""},
-                {"\n– Siemens AG", "01/2005", "04/2005",
+                {"\n– Siemens AG", "https://www.siemens.com", "01/2005", "04/2005",
                         "3 месяца обучения мобильным IN сетям (Берлин)", ""},
-                {"\n– Alcatel", "09/1997", "03/1998",
+                {"\n– Alcatel", "https://www.alcatel.ru", "09/1997", "03/1998",
                         "6 месяцев обучения цифровым телефонным сетям (Москва)", ""},
                 {"\n– Санкт-Петербургский национальный исследовательский университет" +
-                        "информационных технологий, механики и оптики",
+                        "информационных технологий, механики и оптики", "https://itmo.ru",
                         "09/1993", "07/1996", "Аспирантура (программист С, С++)", "",
                         "09/1987", "07/1993", "Инженер (программист Fortran, C)", ""},
-                {"\n– Заочная физико-техническая школа при МФТИ", "09/1984", "06/1987",
+                {"\n– Заочная физико-техническая школа при МФТИ", "https://mipt.ru",
+                        "09/1984", "06/1987",
                         "Закончил с отличием", ""},
         };
     }
@@ -219,9 +221,9 @@ public class ResumeTestData {
     private static void createCompanySection(Resume resume, String[][] companies, SectionType type) {
         CompanySection companySection = new CompanySection();
         for (String[] items : companies) {
-            Company company = new Company(items[0]);
-            for (int i = 0; items.length - i != 1; i += 4) {
-                Period period = new Period(items[i + 1], items[i + 2], items[i + 3], items[i + 4]);
+            Company company = new Company(items[0], items[1]);
+            for (int i = 0; items.length - i != 2; i += 4) {
+                Period period = new Period(items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
                 company.setPeriod(period);
             }
             companySection.addCompany(company);
@@ -231,9 +233,8 @@ public class ResumeTestData {
 
     private static void printCompanySection(Resume resume, SectionType type) {
         System.out.println("\n\n" + type.getTitle());
-        for (Company company : ((CompanySection) resume.getSections()
-                .get(type)).getCompanies()) {
-            System.out.println(company.getTitle());
+        for (Company company : ((CompanySection) resume.getSection(type)).getCompanies()) {
+            System.out.println(company.getHomePage().getTitle());
             for (Period period : company.getPeriods()) {
                 System.out.print(period.getPeriod());
                 System.out.println(period.getTitle());
