@@ -14,38 +14,38 @@ import com.basejava.webapp.model.TextSection;
 public class ResumeTestData {
     public static void main(String[] args) {
 
-        Resume resume = new Resume("Григорий Кислин");
-        System.out.println("\n" + resume.getFullName() + "\n");
+        Resume resume = createResume("uuid1", "Григорий Кислин");
+        printResume(resume);
+    }
 
-        // Contacts
-        String[] contacts = getContacts();
-        for (int i = 0; i < ContactType.values().length; i++) {
-            resume.addContact(ContactType.values()[i], contacts[i]);
-            System.out.println(ContactType.values()[i].getTitle() +
-                    resume.getContact(ContactType.values()[i]));
+    public static Resume createResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+        ContactType[] contactTypes = ContactType.values();
+        for (int i = 0; i < contactTypes.length; i++) {
+            resume.addContact(contactTypes[i], getContacts()[i]);
         }
-
-        // Objective, Personal
         String[] textContent = getTexts();
         for (int i = 0; i < textContent.length; i++) {
-            createTextSection(resume, textContent[i], SectionType.values()[i]);
+            resume.addSection(SectionType.values()[i], new TextSection(textContent[i]));
+        }
+        resume.addSection(SectionType.ACHIEVEMENT, getAchievements());
+        resume.addSection(SectionType.QUALIFICATIONS, getQualifications());
+        resume.addSection(SectionType.EXPERIENCE, createCompanySection(getExperience()));
+        resume.addSection(SectionType.EDUCATION, createCompanySection(getEducation()));
+        return resume;
+    }
+
+    public static void printResume(Resume resume) {
+        System.out.println("\n" + resume.getFullName() + "\n");
+        for (ContactType type : ContactType.values()) {
+            System.out.println(type.getTitle() + resume.getContact(type));
+        }
+        for (int i = 0; i < getTexts().length; i++) {
             printTextSection(resume, SectionType.values()[i]);
         }
-
-        // Achievements
-        resume.addSection(SectionType.ACHIEVEMENT, getAchievements());
         printListSection(resume, SectionType.ACHIEVEMENT);
-
-        // Qualifications
-        resume.addSection(SectionType.QUALIFICATIONS, getQualifications());
         printListSection(resume, SectionType.QUALIFICATIONS);
-
-        // Experience
-        createCompanySection(resume, getExperience(), SectionType.EXPERIENCE);
         printCompanySection(resume, SectionType.EXPERIENCE);
-
-        // Education
-        createCompanySection(resume, getEducation(), SectionType.EDUCATION);
         printCompanySection(resume, SectionType.EDUCATION);
     }
 
@@ -67,16 +67,6 @@ public class ResumeTestData {
                 "Аналитический склад ума, сильная логика, креативность, инициативность. " +
                         "Пурист кода и архитектуры."
         };
-    }
-
-    private static void createTextSection(Resume resume, String textContent, SectionType type) {
-        TextSection textSection = new TextSection(textContent);
-        resume.addSection(type, textSection);
-    }
-
-    private static void printTextSection(Resume resume, SectionType type) {
-        System.out.println("\n\n" + type.getTitle());
-        System.out.println(((TextSection) resume.getSection(type)).getDescription());
     }
 
     private static ListSection getAchievements() {
@@ -144,11 +134,17 @@ public class ResumeTestData {
         return new ListSection(Arrays.asList(qualifications));
     }
 
-    private static void printListSection(Resume resume, SectionType type) {
-        System.out.println("\n\n" + type.getTitle());
-        for (String item : ((ListSection) resume.getSection(type)).getDescription()) {
-            System.out.println(item);
+    private static CompanySection createCompanySection(String[][] companies) {
+        CompanySection companySection = new CompanySection();
+        for (String[] items : companies) {
+            Company company = new Company(items[0], items[1]);
+            for (int i = 0; items.length - i != 2; i += 4) {
+                Period period = new Period(items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
+                company.setPeriod(period);
+            }
+            companySection.addCompany(company);
         }
+        return companySection;
     }
 
     private static String[][] getExperience() {
@@ -218,17 +214,16 @@ public class ResumeTestData {
         };
     }
 
-    private static void createCompanySection(Resume resume, String[][] companies, SectionType type) {
-        CompanySection companySection = new CompanySection();
-        for (String[] items : companies) {
-            Company company = new Company(items[0], items[1]);
-            for (int i = 0; items.length - i != 2; i += 4) {
-                Period period = new Period(items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
-                company.setPeriod(period);
-            }
-            companySection.addCompany(company);
+    private static void printTextSection(Resume resume, SectionType type) {
+        System.out.println("\n\n" + type.getTitle());
+        System.out.println(((TextSection) resume.getSection(type)).getDescription());
+    }
+
+    private static void printListSection(Resume resume, SectionType type) {
+        System.out.println("\n\n" + type.getTitle());
+        for (String item : ((ListSection) resume.getSection(type)).getDescription()) {
+            System.out.println(item);
         }
-        resume.addSection(type, companySection);
     }
 
     private static void printCompanySection(Resume resume, SectionType type) {
