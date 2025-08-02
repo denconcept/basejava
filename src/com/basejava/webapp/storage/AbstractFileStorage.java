@@ -28,7 +28,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
         for (File file : getListFiles()) {
-            Resume resume = doRead(file);
+            Resume resume;
+            resume = doGet(file);
             resumes.add(resume);
         }
         return resumes;
@@ -36,7 +37,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File searchKey) {
-        return doRead(searchKey);
+        try {
+            return doRead(searchKey);
+        } catch (IOException e) {
+            throw new StorageException("IO error", searchKey.getName(), e);
+        }
     }
 
     @Override
@@ -51,9 +56,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected void doDelete(File searchKey) {
-        searchKey.delete();
+        if (!searchKey.delete()) {
+            throw new StorageException("Could not delete file: ", searchKey.getName());
+        }
     }
 
     @Override
@@ -66,10 +72,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     protected void doClear() {
         for (File file : getListFiles()) {
-            file.delete();
+            doDelete(file);
         }
     }
 
@@ -88,7 +93,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return getListFiles().length;
     }
 
-    protected abstract Resume doRead(File searchKey);
+    protected abstract Resume doRead(File searchKey) throws IOException;
 
     protected abstract void doWrite(File searchKey, Resume resume) throws IOException;
 
