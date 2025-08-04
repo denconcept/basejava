@@ -1,12 +1,14 @@
 package com.basejava.webapp;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import com.basejava.webapp.model.Company;
 import com.basejava.webapp.model.CompanySection;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.ListSection;
-import com.basejava.webapp.model.Period;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.SectionType;
 import com.basejava.webapp.model.TextSection;
@@ -139,7 +141,10 @@ public class ResumeTestData {
         for (String[] items : companies) {
             Company company = new Company(items[0], items[1]);
             for (int i = 0; items.length - i != 2; i += 4) {
-                Period period = new Period(items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
+                Company.Period period = new Company.Period(
+                        formatDate(items[i + 2]),
+                        items[i + 3].equals("Сейчас") ? LocalDate.now() : formatDate(items[i + 3]),
+                        items[i + 4], items[i + 5]);
                 company.setPeriod(period);
             }
             companySection.addCompany(company);
@@ -230,11 +235,17 @@ public class ResumeTestData {
         System.out.println("\n\n" + type.getTitle());
         for (Company company : ((CompanySection) resume.getSection(type)).getCompanies()) {
             System.out.println(company.getHomePage().getTitle());
-            for (Period period : company.getPeriods()) {
+            for (Company.Period period : company.getPeriods()) {
                 System.out.print(period.getPeriod());
                 System.out.println(period.getTitle());
                 System.out.print(period.getDescription());
             }
         }
+    }
+
+    private static LocalDate formatDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+        YearMonth ym = YearMonth.parse(date, formatter);
+        return ym.atDay(1);
     }
 }

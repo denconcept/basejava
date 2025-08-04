@@ -40,7 +40,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return doRead(searchKey);
         } catch (IOException e) {
-            throw new StorageException("IO error", searchKey.getName(), e);
+            throw new StorageException("File read error ", searchKey.getName(), e);
         }
     }
 
@@ -49,16 +49,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void doSave(File searchKey, Resume resume) {
         try {
             searchKey.createNewFile();
-            doWrite(searchKey, resume);
         } catch (IOException e) {
-            throw new StorageException("IO error", searchKey.getName(), e);
+            throw new StorageException("Couldn't create file ", searchKey.getName(), e);
         }
+        doUpdate(searchKey, resume);
     }
 
     @Override
     protected void doDelete(File searchKey) {
         if (!searchKey.delete()) {
-            throw new StorageException("Could not delete file: ", searchKey.getName());
+            throw new StorageException("File delete error ", searchKey.getName());
         }
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(searchKey, resume);
         } catch (IOException e) {
-            throw new StorageException("IO error", searchKey.getName(), e);
+            throw new StorageException("File write error ", searchKey.getName(), e);
         }
     }
 
@@ -90,7 +90,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        return getListFiles().length;
+        String[] list = directory.list();
+        if (list == null) {
+            throw new IllegalStateException("Directory read error " + directory.getAbsolutePath());
+        }
+        return list.length;
     }
 
     protected abstract Resume doRead(File searchKey) throws IOException;
@@ -100,7 +104,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private File[] getListFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new IllegalStateException("Cannot read directory: " + directory.getAbsolutePath());
+            throw new IllegalStateException("Directory read error " + directory.getAbsolutePath());
         }
         return files;
     }
