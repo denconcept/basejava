@@ -26,20 +26,20 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        // HW_8
+        // HW_8_9
         System.out.println("\n");
         File root = new File("/Users/denis/Java/BaseJava/basejava");
-        walk(root);
+        walk(root, "");
     }
 
-    public static void walk(File file) {
+    public static void walk(File file, String offset) {
         if (file.isDirectory()) {
-            System.out.println("Directory: " + file.getName());
-            for (File childFile : Objects.requireNonNull(file.listFiles())) {
-                walk(childFile);
+            System.out.println(offset + "DIR: " + file.getName());
+            for (File innerFile : Objects.requireNonNull(file.listFiles())) {
+                walk(innerFile, offset + "\t");
             }
         } else {
-            System.out.println("File: " + file.getName());
+            System.out.println(offset + file.getName());
         }
     }
 }

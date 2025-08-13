@@ -10,11 +10,13 @@ import com.basejava.webapp.model.Resume;
 
 import static com.basejava.webapp.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractStorageTest {
 
+    protected static final String STORAGE_DIR =
+            "/Users/denis/Java/BaseJava/basejava/storage";
+    protected static final FileSaveStrategy OBJECT_STREAM_STRATEGY = new ObjectStreamStrategy();
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -99,7 +101,7 @@ public abstract class AbstractStorageTest {
     void update() {
         Resume newResume = new Resume(UUID_3, "New Resume");
         storage.update(newResume);
-        assertSame(newResume, storage.get(RESUME_3.getUuid()));
+        assertEquals(newResume, storage.get(RESUME_3.getUuid()));
     }
 
     @org.junit.jupiter.api.Test
@@ -119,8 +121,8 @@ public abstract class AbstractStorageTest {
         assertEquals(resumes, storage.getAllSorted());
     }
 
-    private void assertGet(Resume r) {
-        assertEquals(r, storage.get(r.getUuid()));
+    private void assertGet(Resume resume) {
+        assertEquals(resume, storage.get(resume.getUuid()));
     }
 
     private void assertSize(int size) {

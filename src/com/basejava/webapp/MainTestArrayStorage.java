@@ -1,12 +1,12 @@
 package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.MapUuidStorage;
+import com.basejava.webapp.storage.ArrayStorage;
 import com.basejava.webapp.storage.Storage;
 
 public class MainTestArrayStorage {
 
-    private static final Storage ARRAY_STORAGE = new MapUuidStorage();
+    private static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
         final Resume r1 = new Resume("uuid1", "Name1");

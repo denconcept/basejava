@@ -28,8 +28,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
         for (File file : getListFiles()) {
-            Resume resume;
-            resume = doGet(file);
+            Resume resume = doGet(file);
             resumes.add(resume);
         }
         return resumes;
@@ -39,7 +38,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected Resume doGet(File searchKey) {
         try {
             return doRead(searchKey);
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new StorageException("File read error ", searchKey.getName(), e);
         }
     }
@@ -97,7 +96,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return list.length;
     }
 
-    protected abstract Resume doRead(File searchKey) throws IOException;
+    protected abstract Resume doRead(File searchKey) throws IOException, ClassNotFoundException;
 
     protected abstract void doWrite(File searchKey, Resume resume) throws IOException;
 
