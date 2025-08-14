@@ -1,4 +1,4 @@
-package com.basejava.webapp.storage;
+package com.basejava.webapp.storage.strategies;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

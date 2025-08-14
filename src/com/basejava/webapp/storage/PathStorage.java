@@ -11,17 +11,20 @@ import java.util.stream.Stream;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategies.FileSaveStrategy;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
+    private final FileSaveStrategy strategy;
 
-    protected AbstractPathStorage(String dir) {
+    protected PathStorage(String dir, FileSaveStrategy strategy) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
+        this.strategy = strategy;
     }
 
     @Override
@@ -37,7 +40,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path searchKey) {
         try {
-            return doRead(searchKey);
+            return strategy.doRead(searchKey);
         } catch (IOException | ClassNotFoundException e) {
             throw new StorageException("Path read error ", searchKey.getFileName().toString(), e);
         }
@@ -65,7 +68,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Path searchKey, Resume resume) {
         try {
-            doWrite(searchKey, resume);
+            strategy.doWrite(searchKey, resume);
         } catch (IOException e) {
             throw new StorageException("Path write error ", searchKey.getFileName().toString(), e);
         }
@@ -92,26 +95,14 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        int count;
-        try (Stream<Path> stream = Files.list(directory)) {
-            count = (int) stream.count();
-        } catch (IOException e) {
-            throw new StorageException("Path size error", null, e);
-        }
-        return count;
+        return getListPaths().size();
     }
 
-    protected abstract Resume doRead(Path searchKey) throws IOException, ClassNotFoundException;
-
-    protected abstract void doWrite(Path searchKey, Resume resume) throws IOException;
-
-    private Path[] getListPaths() {
-        Path[] paths;
+    private List<Path> getListPaths() {
         try (Stream<Path> stream = Files.list(directory)) {
-            paths = stream.toArray(Path[]::new);
+            return stream.toList();
         } catch (IOException e) {
             throw new IllegalStateException("Directory read error " + directory.getFileName());
         }
-        return paths;
     }
 }

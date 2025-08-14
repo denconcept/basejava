@@ -8,12 +8,14 @@ import java.util.Objects;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategies.FileSaveStrategy;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
+    private final FileSaveStrategy strategy;
 
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(File directory, FileSaveStrategy strategy) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -22,6 +24,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        this.strategy = strategy;
     }
 
     @Override
@@ -37,7 +40,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File searchKey) {
         try {
-            return doRead(searchKey);
+            return strategy.doRead(searchKey.toPath());
         } catch (IOException | ClassNotFoundException e) {
             throw new StorageException("File read error ", searchKey.getName(), e);
         }
@@ -64,7 +67,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(File searchKey, Resume resume) {
         try {
-            doWrite(searchKey, resume);
+            strategy.doWrite(searchKey.toPath(), resume);
         } catch (IOException e) {
             throw new StorageException("File write error ", searchKey.getName(), e);
         }
@@ -89,16 +92,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
-            throw new IllegalStateException("Directory read error " + directory.getAbsolutePath());
-        }
-        return list.length;
+        return getListFiles().length;
     }
-
-    protected abstract Resume doRead(File searchKey) throws IOException, ClassNotFoundException;
-
-    protected abstract void doWrite(File searchKey, Resume resume) throws IOException;
 
     private File[] getListFiles() {
         File[] files = directory.listFiles();

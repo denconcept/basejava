@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategies.FileSaveStrategy;
+import com.basejava.webapp.storage.strategies.ObjectStreamStrategy;
 
 import static com.basejava.webapp.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.assertEquals;
