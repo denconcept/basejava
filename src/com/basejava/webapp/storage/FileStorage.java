@@ -8,14 +8,14 @@ import java.util.Objects;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.strategies.FileSaveStrategy;
+import com.basejava.webapp.storage.serializer.StreamSerializer;
 
 public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
-    private final FileSaveStrategy strategy;
+    private final StreamSerializer streamSerializer;
 
-    protected FileStorage(File directory, FileSaveStrategy strategy) {
+    protected FileStorage(File directory, StreamSerializer streamSerializer) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -24,7 +24,7 @@ public class FileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-        this.strategy = strategy;
+        this.streamSerializer = streamSerializer;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File searchKey) {
         try {
-            return strategy.doRead(searchKey.toPath());
+            return streamSerializer.doRead(searchKey.toPath());
         } catch (IOException | ClassNotFoundException e) {
             throw new StorageException("File read error ", searchKey.getName(), e);
         }
@@ -67,7 +67,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(File searchKey, Resume resume) {
         try {
-            strategy.doWrite(searchKey.toPath(), resume);
+            streamSerializer.doWrite(searchKey.toPath(), resume);
         } catch (IOException e) {
             throw new StorageException("File write error ", searchKey.getName(), e);
         }
