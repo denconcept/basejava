@@ -7,7 +7,10 @@ public class TextSection extends AbstractSection {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final String description;
+    private String description;
+
+    @SuppressWarnings("unused")
+    public TextSection() {}
 
     public TextSection(String description) {
         Objects.requireNonNull(description, "description must not be null");

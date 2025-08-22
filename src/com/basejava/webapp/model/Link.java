@@ -4,12 +4,19 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Link implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final String title;
-    private final String url;
+    private String title;
+    private String url;
+
+    @SuppressWarnings("unused")
+    public Link() {}
 
     public Link(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");

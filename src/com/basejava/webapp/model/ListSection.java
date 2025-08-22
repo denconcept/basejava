@@ -9,7 +9,10 @@ public class ListSection extends AbstractSection {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final List<String> description;
+    private List<String> description;
+
+    @SuppressWarnings("unused")
+    public ListSection() {}
 
     public ListSection(List<String> description) {
         Objects.requireNonNull(description, "description must not be null");

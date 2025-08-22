@@ -8,12 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.basejava.webapp.util.JsonLocalDateAdapter;
+import com.basejava.webapp.util.XmlLocalDateAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final Link homePage;
+    private Link homePage;
     private final List<Period> periods = new ArrayList<>();
+
+    @SuppressWarnings("unused")
+    public Company() {}
 
     public Company(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");
@@ -52,12 +63,20 @@ public class Company implements Serializable {
                 '}';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
 
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
+        @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+        @JsonAdapter(JsonLocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+        @JsonAdapter(JsonLocalDateAdapter.class)
+        private LocalDate endDate;
+        private String title;
+        private String description;
+
+        @SuppressWarnings("unused")
+        public Period() {}
 
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");
