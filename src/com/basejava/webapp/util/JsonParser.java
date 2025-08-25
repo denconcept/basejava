@@ -4,13 +4,13 @@ import java.io.Reader;
 import java.io.Writer;
 import java.time.LocalDate;
 
-import com.basejava.webapp.model.AbstractSection;
+import com.basejava.webapp.model.Section;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JsonParser {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter<>())
+            .registerTypeAdapter(Section.class, new JsonSectionAdapter<>())
             .registerTypeAdapter(LocalDate.class, new JsonLocalDateAdapter())
             .create();
 

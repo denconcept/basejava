@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CompanySection extends AbstractSection {
+public class CompanySection extends Section {
 
     @Serial
     private static final long serialVersionUID = 1L;

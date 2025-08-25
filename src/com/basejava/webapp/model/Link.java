@@ -28,6 +28,10 @@ public class Link implements Serializable {
         return title;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

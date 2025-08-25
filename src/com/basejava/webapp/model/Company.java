@@ -88,6 +88,14 @@ public class Company implements Serializable {
             this.description = description;
         }
 
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
         public String getPeriod() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
             return startDate.format(formatter) + " – " + endDate.format(formatter) + "\t";

@@ -26,16 +26,16 @@ public class XmlStreamSerializer implements StreamSerializer {
     }
 
     @Override
-    public Resume doRead(Path searchKey) throws IOException {
-        try (Reader reader = Files.newBufferedReader(searchKey, StandardCharsets.UTF_8)) {
-            return xmlParser.unmarshall(reader);
+    public void doWrite(Path searchKey, Resume resume) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(searchKey)) {
+            xmlParser.marshall(resume, writer);
         }
     }
 
     @Override
-    public void doWrite(Path searchKey, Resume resume) throws IOException {
-        try (Writer writer = Files.newBufferedWriter(searchKey)) {
-            xmlParser.marshall(resume, writer);
+    public Resume doRead(Path searchKey) throws IOException {
+        try (Reader reader = Files.newBufferedReader(searchKey, StandardCharsets.UTF_8)) {
+            return xmlParser.unmarshall(reader);
         }
     }
 }

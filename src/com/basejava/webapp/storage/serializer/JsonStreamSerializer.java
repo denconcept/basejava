@@ -13,16 +13,16 @@ import com.basejava.webapp.util.JsonParser;
 public class JsonStreamSerializer implements StreamSerializer {
 
     @Override
-    public Resume doRead(Path searchKey) throws IOException {
-        try (Reader reader = Files.newBufferedReader(searchKey, StandardCharsets.UTF_8)) {
-            return JsonParser.read(reader, Resume.class);
+    public void doWrite(Path searchKey, Resume resume) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(searchKey)) {
+            JsonParser.write(resume, writer);
         }
     }
 
     @Override
-    public void doWrite(Path searchKey, Resume resume) throws IOException {
-        try (Writer writer = Files.newBufferedWriter(searchKey)) {
-            JsonParser.write(resume, writer);
+    public Resume doRead(Path searchKey) throws IOException {
+        try (Reader reader = Files.newBufferedReader(searchKey, StandardCharsets.UTF_8)) {
+            return JsonParser.read(reader, Resume.class);
         }
     }
 }

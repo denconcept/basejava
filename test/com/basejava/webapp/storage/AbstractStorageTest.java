@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serializer.DataStreamSerializer;
 import com.basejava.webapp.storage.serializer.JsonStreamSerializer;
 import com.basejava.webapp.storage.serializer.ObjectStreamSerializer;
 import com.basejava.webapp.storage.serializer.StreamSerializer;
@@ -23,6 +24,7 @@ public abstract class AbstractStorageTest {
     protected static final StreamSerializer OBJECT_STREAM_SERIALIZER = new ObjectStreamSerializer();
     protected static final StreamSerializer XML_STREAM_SERIALIZER = new XmlStreamSerializer();
     protected static final StreamSerializer JSON_STREAM_SERIALIZER = new JsonStreamSerializer();
+    protected static final StreamSerializer DATA_STREAM_SERIALIZER = new DataStreamSerializer();
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
