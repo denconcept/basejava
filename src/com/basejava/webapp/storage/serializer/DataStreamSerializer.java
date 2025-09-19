@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -35,16 +36,16 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void writeContacts(DataOutputStream dos, Resume resume) throws IOException {
         Map<ContactType, String> contacts = resume.getContacts();
         dos.writeInt(contacts.size());
-        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+        writeWithException(contacts.entrySet(), entry -> {
             dos.writeUTF(entry.getKey().name());
             dos.writeUTF(entry.getValue());
-        }
+        });
     }
 
     private static void writeSections(DataOutputStream dos, Resume resume) throws IOException {
         Map<SectionType, Section> sections = resume.getSections();
         dos.writeInt(sections.size());
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+        writeWithException(sections.entrySet(), entry -> {
             SectionType key = entry.getKey();
             Section section = entry.getValue();
             dos.writeUTF(key.name());
@@ -54,7 +55,7 @@ public class DataStreamSerializer implements StreamSerializer {
                 case EXPERIENCE, EDUCATION -> writeCompanySections(dos, section);
                 default -> throw new IllegalStateException("writing error");
             }
-        }
+        });
     }
 
     private static void writeTextSections(DataOutputStream dos, Section section) throws IOException {
@@ -64,18 +65,16 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void writeListSections(DataOutputStream dos, Section section) throws IOException {
         List<String> items = ((ListSection) section).getDescription();
         dos.writeInt(items.size());
-        for (String item : items) {
-            dos.writeUTF(item);
-        }
+        writeWithException(items, dos::writeUTF);
     }
 
     private static void writeCompanySections(DataOutputStream dos, Section section) throws IOException {
         List<Company> companies = ((CompanySection) section).getCompanies();
         dos.writeInt(companies.size());
-        for (Company company : companies) {
+        writeWithException(companies, company -> {
             writeLink(dos, company);
             writePeriods(dos, company);
-        }
+        });
     }
 
     private static void writeLink(DataOutputStream dos, Company company) throws IOException {
@@ -87,11 +86,18 @@ public class DataStreamSerializer implements StreamSerializer {
     private static void writePeriods(DataOutputStream dos, Company company) throws IOException {
         List<Company.Period> periods = company.getPeriods();
         dos.writeInt(periods.size());
-        for (Company.Period period : periods) {
+        writeWithException(periods, period -> {
             dos.writeUTF(period.getStartDate().toString());
             dos.writeUTF(period.getEndDate().toString());
             dos.writeUTF(period.getTitle());
             dos.writeUTF(period.getDescription());
+        });
+    }
+
+    private static <T> void writeWithException(Collection<T> collection, ConsumerWithException<T> action)
+            throws IOException {
+        for (T t : collection) {
+            action.accept(t);
         }
     }
 
