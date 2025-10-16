@@ -145,7 +145,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void readWithException(DataInputStream dis,
-                                       ConsumerWithExceptionNoArg action) throws IOException {
+                                   ConsumerWithExceptionNoArg action) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             action.accept();
