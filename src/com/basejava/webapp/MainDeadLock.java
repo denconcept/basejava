@@ -2,38 +2,29 @@ package com.basejava.webapp;
 
 public class MainDeadLock {
 
-    private static final Object LOCK_0 = new Object() {
-        @Override
-        public String toString() {
-            return "lock0";
-        }
-    };
-    private static final Object LOCK_1 = new Object() {
-        @Override
-        public String toString() {
-            return "lock1";
-        }
-    };
+    static final String LOCK_0 = "lock0";
+    static final String LOCK_1 = "lock1";
 
     public static void main(String[] args) {
-        Thread thread0 = new Thread(() -> callDeadLock(LOCK_0, LOCK_1));
-        Thread thread1 = new Thread(() -> callDeadLock(LOCK_1, LOCK_0));
-
-        thread0.start();
-        thread1.start();
+        deadLock(LOCK_0, LOCK_1);
+        deadLock(LOCK_1, LOCK_0);
     }
 
-    private static void callDeadLock(Object lock0, Object lock1) {
-        synchronized (lock0) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    private static void deadLock(String lock0, String lock1) {
+        new Thread(() -> {
+            System.out.println("Waiting " + lock0);
+            synchronized (lock0) {
+                System.out.println("Holding " + lock0);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Waiting " + lock1);
+                synchronized (lock1) {
+                    System.out.println("Holding " + lock1);
+                }
             }
-            System.out.println(Thread.currentThread().getName() + " пытается взять " + lock1.toString());
-            synchronized (lock1) {
-                System.out.println(Thread.currentThread().getName());
-            }
-        }
+        }).start();
     }
 }
