@@ -2,38 +2,38 @@ package com.basejava.webapp;
 
 public class MainDeadLock {
 
-    private static final Object LOCK_1 = new Object();
-    private static final Object LOCK_2 = new Object();
+    private static final Object LOCK_0 = new Object() {
+        @Override
+        public String toString() {
+            return "lock0";
+        }
+    };
+    private static final Object LOCK_1 = new Object() {
+        @Override
+        public String toString() {
+            return "lock1";
+        }
+    };
 
     public static void main(String[] args) {
-        Thread thread1 = new Thread(() -> {
-            synchronized (LOCK_1) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println("Thread1 пытается взять LOCK_2");
-                synchronized (LOCK_2) {
-                    System.out.println("Thread1");
-                }
-            }
-        });
-        Thread thread2 = new Thread(() -> {
-            synchronized (LOCK_2) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println("Thread2 пытается взять LOCK_1");
-                synchronized (LOCK_1) {
-                    System.out.println("Thread2");
-                }
-            }
-        });
+        Thread thread0 = new Thread(() -> callDeadLock(LOCK_0, LOCK_1));
+        Thread thread1 = new Thread(() -> callDeadLock(LOCK_1, LOCK_0));
 
+        thread0.start();
         thread1.start();
-        thread2.start();
+    }
+
+    private static void callDeadLock(Object lock0, Object lock1) {
+        synchronized (lock0) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(Thread.currentThread().getName() + " пытается взять " + lock1.toString());
+            synchronized (lock1) {
+                System.out.println(Thread.currentThread().getName());
+            }
+        }
     }
 }
