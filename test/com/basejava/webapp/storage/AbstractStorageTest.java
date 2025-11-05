@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
@@ -19,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class AbstractStorageTest {
 
-    protected static final String STORAGE_DIR =
-            "/Users/denis/Java/BaseJava/basejava/storage";
+    protected static final String STORAGE_DIR = Config.getInstance().getStorageDir().toString();
     protected static final StreamSerializer OBJECT_STREAM_SERIALIZER = new ObjectStreamSerializer();
     protected static final StreamSerializer XML_STREAM_SERIALIZER = new XmlStreamSerializer();
     protected static final StreamSerializer JSON_STREAM_SERIALIZER = new JsonStreamSerializer();
