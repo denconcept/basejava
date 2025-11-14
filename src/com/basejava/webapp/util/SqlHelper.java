@@ -7,13 +7,10 @@ import java.sql.SQLException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.sql.ConnectionFactory;
 
-public final class SqlHelper {
+public record SqlHelper(ConnectionFactory connection) {
 
-    private SqlHelper() {}
-
-    public static <R> R get(ConnectionFactory cf, String sql,
-                                SqlFunction<PreparedStatement, R> action) {
-        try (Connection conn = cf.getConnection();
+    public <R> R get(String sql, SqlFunction<PreparedStatement, R> action) {
+        try (Connection conn = connection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             return action.accept(ps);
         } catch (SQLException e) {

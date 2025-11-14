@@ -8,20 +8,19 @@ import java.util.List;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.sql.ConnectionFactory;
 import com.basejava.webapp.util.SqlHelper;
 
 public class SqlStorage implements Storage {
 
-    public final ConnectionFactory connection;
+    public final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
-        connection = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return SqlHelper.get(connection, "SELECT * FROM resume ORDER BY full_name;",
+        return sqlHelper.get("SELECT * FROM resume ORDER BY full_name;",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     List<Resume> resumes = new ArrayList<>();
@@ -38,7 +37,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return SqlHelper.get(connection, "SELECT * FROM resume r WHERE r.uuid = ?",
+        return sqlHelper.get("SELECT * FROM resume r WHERE r.uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
@@ -51,7 +50,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return SqlHelper.get(connection, "SELECT COUNT(*) FROM resume",
+        return sqlHelper.get("SELECT COUNT(*) FROM resume",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
@@ -63,7 +62,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        int result = SqlHelper.get(connection,
+        int result = sqlHelper.get(
                 "INSERT INTO resume (uuid, full_name) VALUES (?, ?) ON CONFLICT (uuid) DO NOTHING",
                 ps -> {
                     ps.setString(1, resume.getUuid());
@@ -77,7 +76,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        int result = SqlHelper.get(connection, "DELETE FROM resume r WHERE r.uuid = ?",
+        int result = sqlHelper.get("DELETE FROM resume r WHERE r.uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
                     return ps.executeUpdate();
@@ -89,7 +88,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        int result = SqlHelper.get(connection, "UPDATE resume SET full_name = ? WHERE uuid = ?",
+        int result = sqlHelper.get("UPDATE resume SET full_name = ? WHERE uuid = ?",
                 ps -> {
                     ps.setString(1, resume.getFullName());
                     ps.setString(2, resume.getUuid());
@@ -102,7 +101,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        SqlHelper.get(connection, "DELETE FROM resume",
+        sqlHelper.get("DELETE FROM resume",
                 ps -> {
                     ps.execute();
                     return null;
