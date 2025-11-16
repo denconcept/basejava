@@ -1,9 +1,9 @@
-package com.basejava.webapp.util;
+package com.basejava.webapp.sql;
 
 import java.sql.SQLException;
 
 @FunctionalInterface
 public interface SqlFunction<T, R> {
 
-    R accept(T t) throws SQLException;
+    R execute(T t) throws SQLException;
 }
