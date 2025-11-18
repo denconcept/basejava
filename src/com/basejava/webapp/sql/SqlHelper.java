@@ -4,16 +4,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.basejava.webapp.exception.StorageException;
+public class SqlHelper {
 
-public record SqlHelper(ConnectionFactory connection) {
+    private final ConnectionFactory connection;
 
-    public <R> R execute(String sql, SqlFunction<PreparedStatement, R> action) {
+    public SqlHelper(ConnectionFactory connection) {
+        this.connection = connection;
+    }
+
+    public void execute(String sql) {
+        execute(sql, PreparedStatement::execute);
+    }
+
+    public <T> T execute(String sql, SqlExecutor<T> executor) {
         try (Connection conn = connection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            return action.execute(ps);
+            return executor.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 }
