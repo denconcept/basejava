@@ -26,14 +26,14 @@ public class ResumeTestData {
         for (int i = 0; i < contactTypes.length; i++) {
             resume.addContact(contactTypes[i], getContacts()[i]);
         }
-        String[] textContent = getTexts();
+        /* String[] textContent = getTexts();
         for (int i = 0; i < textContent.length; i++) {
             resume.addSection(SectionType.values()[i], new TextSection(textContent[i]));
         }
         resume.addSection(SectionType.ACHIEVEMENT, getAchievements());
         resume.addSection(SectionType.QUALIFICATIONS, getQualifications());
         resume.addSection(SectionType.EXPERIENCE, createCompanySection(getExperience()));
-        resume.addSection(SectionType.EDUCATION, createCompanySection(getEducation()));
+        resume.addSection(SectionType.EDUCATION, createCompanySection(getEducation()));*/
         return resume;
     }
 
