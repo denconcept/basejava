@@ -1,17 +1,16 @@
 package com.basejava.storage;
 
+import com.basejava.exception.StorageException;
+import com.basejava.model.Resume;
+import com.basejava.storage.serializer.StreamSerializer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.basejava.exception.StorageException;
-import com.basejava.model.Resume;
-import com.basejava.storage.serializer.StreamSerializer;
-
 public class FileStorage extends AbstractStorage<File> {
-
+    
     private final File directory;
     private final StreamSerializer streamSerializer;
 

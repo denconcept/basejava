@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MainFile {
+    
     public static void main(String[] args) {
         String filePath = "/Users/denis/Java/BaseJava/basejava/.gitignore";
         File file = new File(filePath);

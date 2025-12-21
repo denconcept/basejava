@@ -1,5 +1,7 @@
 package com.basejava.storage.serializer;
 
+import com.basejava.model.Resume;
+import com.basejava.util.JsonParser;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -7,11 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.basejava.model.Resume;
-import com.basejava.util.JsonParser;
-
 public class JsonStreamSerializer implements StreamSerializer {
-
+    
     @Override
     public void doWrite(Path searchKey, Resume resume) throws IOException {
         try (Writer writer = Files.newBufferedWriter(searchKey)) {

@@ -4,12 +4,6 @@ import static com.basejava.ResumeTestData.createResume;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-
 import com.basejava.Config;
 import com.basejava.exception.ExistStorageException;
 import com.basejava.exception.NotExistStorageException;
@@ -18,11 +12,15 @@ import com.basejava.storage.Storage;
 import com.basejava.storage.serializer.DataStreamSerializer;
 import com.basejava.storage.serializer.JsonStreamSerializer;
 import com.basejava.storage.serializer.ObjectStreamSerializer;
-import com.basejava.storage.serializer.XmlStreamSerializer;
 import com.basejava.storage.serializer.StreamSerializer;
+import com.basejava.storage.serializer.XmlStreamSerializer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractStorageTest {
-
+    
     protected static final String STORAGE_DIR = Config.getInstance().getStorageDir().toString();
     protected static final StreamSerializer OBJECT_STREAM_SERIALIZER = new ObjectStreamSerializer();
     protected static final StreamSerializer XML_STREAM_SERIALIZER = new XmlStreamSerializer();

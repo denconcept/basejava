@@ -3,6 +3,7 @@ package com.basejava;
 import com.basejava.model.SectionType;
 
 public class TestSingleton {
+    
     private static TestSingleton instance;
 
     public static TestSingleton getInstance() {

@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
-
+    
     @Serial
     private static final long serialVersionUID = 1L;
     private List<String> description;
 
-    @SuppressWarnings("unused")
     public ListSection() {}
 
     public ListSection(List<String> description) {

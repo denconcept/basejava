@@ -1,5 +1,14 @@
 package com.basejava.storage.serializer;
 
+import com.basejava.model.Company;
+import com.basejava.model.CompanySection;
+import com.basejava.model.ContactType;
+import com.basejava.model.Link;
+import com.basejava.model.ListSection;
+import com.basejava.model.Resume;
+import com.basejava.model.Section;
+import com.basejava.model.SectionType;
+import com.basejava.model.TextSection;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,18 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.basejava.model.Company;
-import com.basejava.model.CompanySection;
-import com.basejava.model.ContactType;
-import com.basejava.model.Link;
-import com.basejava.model.ListSection;
-import com.basejava.model.Resume;
-import com.basejava.model.Section;
-import com.basejava.model.SectionType;
-import com.basejava.model.TextSection;
-
 public class DataStreamSerializer implements StreamSerializer {
-
+    
     @Override
     public void doWrite(Path searchKey, Resume resume) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(Files.newOutputStream(searchKey))) {

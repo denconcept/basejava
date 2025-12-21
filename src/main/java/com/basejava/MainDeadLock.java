@@ -1,7 +1,7 @@
 package com.basejava;
 
 public class MainDeadLock {
-
+    
     static final String LOCK_0 = "lock0";
     static final String LOCK_1 = "lock1";
 

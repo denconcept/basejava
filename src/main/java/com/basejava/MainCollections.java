@@ -1,5 +1,6 @@
 package com.basejava;
 
+import com.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,10 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.basejava.model.Resume;
-
 public class MainCollections {
-
+    
     private static final String UUID_1 = "uuid1";
     protected static final Resume RESUME_1 = new Resume(UUID_1, "Name1");
     private static final String UUID_2 = "uuid2";

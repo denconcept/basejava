@@ -1,14 +1,13 @@
 package com.basejava.storage;
 
+import com.basejava.exception.StorageException;
+import com.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.basejava.exception.StorageException;
-import com.basejava.model.Resume;
-
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
-
+    
     public static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;

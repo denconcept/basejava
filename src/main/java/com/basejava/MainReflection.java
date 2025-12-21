@@ -1,12 +1,12 @@
 package com.basejava;
 
+import com.basejava.model.Resume;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.basejava.model.Resume;
-
 public class MainReflection {
+    
     public static void main(String[] args) throws IllegalAccessException,
             NoSuchMethodException, InvocationTargetException {
         Resume r = new Resume("Name1");

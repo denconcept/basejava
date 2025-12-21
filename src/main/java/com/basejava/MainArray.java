@@ -1,24 +1,22 @@
 package com.basejava;
 
+import com.basejava.model.Resume;
+import com.basejava.storage.ArrayStorage;
+import com.basejava.storage.Storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import com.basejava.model.Resume;
-import com.basejava.storage.ArrayStorage;
-import com.basejava.storage.Storage;
-
 public class MainArray {
-
+    
     private static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - " +
-                    "(list | size | save fullName | delete uuid |" +
+            System.out.print("Введите одну из команд - " + "(list | size | save fullName | delete uuid |" +
                     "get uuid | update uuid fullName | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (params.length < 1 || params.length > 3) {

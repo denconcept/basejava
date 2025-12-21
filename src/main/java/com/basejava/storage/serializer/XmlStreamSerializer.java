@@ -1,12 +1,5 @@
 package com.basejava.storage.serializer;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import com.basejava.model.Company;
 import com.basejava.model.CompanySection;
 import com.basejava.model.Link;
@@ -14,9 +7,15 @@ import com.basejava.model.ListSection;
 import com.basejava.model.Resume;
 import com.basejava.model.TextSection;
 import com.basejava.util.XmlParser;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class XmlStreamSerializer implements StreamSerializer {
-
+    
     private final XmlParser xmlParser;
 
     public XmlStreamSerializer() {

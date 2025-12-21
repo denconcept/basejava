@@ -1,5 +1,9 @@
 package com.basejava.storage;
 
+import com.basejava.exception.NotExistStorageException;
+import com.basejava.model.ContactType;
+import com.basejava.model.Resume;
+import com.basejava.sql.SqlHelper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,13 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.basejava.exception.NotExistStorageException;
-import com.basejava.model.ContactType;
-import com.basejava.model.Resume;
-import com.basejava.sql.SqlHelper;
-
 public class SqlStorage implements Storage {
-
     public final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {

@@ -5,7 +5,7 @@ import com.basejava.storage.ArrayStorage;
 import com.basejava.storage.Storage;
 
 public class MainTestArrayStorage {
-
+    
     private static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {

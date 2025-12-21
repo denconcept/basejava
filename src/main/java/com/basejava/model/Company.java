@@ -1,5 +1,11 @@
 package com.basejava.model;
 
+import com.basejava.util.JsonLocalDateAdapter;
+import com.basejava.util.XmlLocalDateAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,23 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.basejava.util.JsonLocalDateAdapter;
-import com.basejava.util.XmlLocalDateAdapter;
-import com.google.gson.annotations.JsonAdapter;
-
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
-
+    
     @Serial
     private static final long serialVersionUID = 1L;
     private Link homePage;
     private final List<Period> periods = new ArrayList<>();
 
-    @SuppressWarnings("unused")
     public Company() {}
 
     public Company(String title, String url) {
@@ -46,7 +43,9 @@ public class Company implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Company company = (Company) o;
         return Objects.equals(homePage, company.homePage) && Objects.equals(periods, company.periods);
     }
@@ -58,17 +57,13 @@ public class Company implements Serializable {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "homePage=" + homePage +
-                ", periods=" + periods +
-                '}';
+        return "Company {homePage = " + homePage + ", periods = " + periods + "}";
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
-
         private static final long serialVersionUID = 1L;
-		@XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
+        @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         @JsonAdapter(JsonLocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
@@ -77,7 +72,6 @@ public class Company implements Serializable {
         private String title;
         private String description;
 
-        @SuppressWarnings("unused")
         public Period() {}
 
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {

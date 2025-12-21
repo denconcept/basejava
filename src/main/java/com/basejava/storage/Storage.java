@@ -1,11 +1,10 @@
 package com.basejava.storage;
 
+import com.basejava.model.Resume;
 import java.util.List;
 
-import com.basejava.model.Resume;
-
 public interface Storage {
-
+    
     List<Resume> getAllSorted();
 
     Resume get(String uuid);

@@ -1,15 +1,14 @@
 package com.basejava.storage;
 
+import com.basejava.exception.ExistStorageException;
+import com.basejava.exception.NotExistStorageException;
+import com.basejava.model.Resume;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.basejava.exception.ExistStorageException;
-import com.basejava.exception.NotExistStorageException;
-import com.basejava.model.Resume;
-
 public abstract class AbstractStorage<SKT> implements Storage {
-
+    
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);

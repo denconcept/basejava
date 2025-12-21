@@ -1,5 +1,8 @@
 package com.basejava.storage;
 
+import com.basejava.exception.StorageException;
+import com.basejava.model.Resume;
+import com.basejava.storage.serializer.StreamSerializer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,12 +12,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.basejava.exception.StorageException;
-import com.basejava.model.Resume;
-import com.basejava.storage.serializer.StreamSerializer;
-
 public class PathStorage extends AbstractStorage<Path> {
-
+    
     private final Path directory;
     private final StreamSerializer streamSerializer;
 

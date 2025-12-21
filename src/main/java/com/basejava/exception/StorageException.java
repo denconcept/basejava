@@ -1,9 +1,8 @@
 package com.basejava.exception;
 
 public class StorageException extends RuntimeException {
-
     private static final long serialVersionUID = 1L;
-	private final String uuid;
+    private final String uuid;
 
     public StorageException(Exception e) {
         this(e.getMessage(), e);
@@ -23,7 +22,6 @@ public class StorageException extends RuntimeException {
         this.uuid = uuid;
     }
 
-    @SuppressWarnings("unused")
     public String getUuid() {
         return uuid;
     }

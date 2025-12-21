@@ -9,7 +9,7 @@ import com.basejava.storage.AbstractArrayStorage;
 import com.basejava.storage.Storage;
 
 public class AbstractArrayStorageTest extends AbstractStorageTest {
-
+    
     protected AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }

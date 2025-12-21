@@ -3,7 +3,7 @@ package com.basejava.storage;
 import com.basejava.model.Resume;
 
 public class ArrayStorage extends AbstractArrayStorage {
-
+    
     @Override
     protected void insert(int index, Resume resume) {
         storage[size] = resume;

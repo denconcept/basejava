@@ -1,9 +1,9 @@
 package com.basejava.util;
 
 public class LazySingleton {
-
+    
     @SuppressWarnings("unused")
-	private static volatile LazySingleton instance;
+    private static volatile LazySingleton instance;
 
     private LazySingleton() {
     }
@@ -14,13 +14,13 @@ public class LazySingleton {
 
     public static LazySingleton getInstance() {
         return LazySingletonHolder.INSTANCE;
-//        if (INSTANCE == null) {
-//            synchronized (LazySingleton.class) {
-//                if (INSTANCE == null) {
-//                    INSTANCE = new LazySingleton();
-//                }
-//            }
-//        }
-//        return INSTANCE;
+        /* if (INSTANCE == null) {
+            synchronized (LazySingleton.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LazySingleton();
+                }
+            }
+        }
+        return INSTANCE;*/
     }
 }

@@ -1,12 +1,11 @@
 package com.basejava.storage;
 
+import com.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.basejava.model.Resume;
-
 public class SortedArrayStorage extends AbstractArrayStorage {
-
+    
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
 
     @Override

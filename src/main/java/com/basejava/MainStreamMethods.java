@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainStreamMethods {
+    
     public static void main(String[] args) {
         int[] nums = {1, 2, 3, 3, 2, 3};
         System.out.println(minValue(nums));

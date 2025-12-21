@@ -1,6 +1,7 @@
 package com.basejava;
 
 public class MainString {
+    
     public static void main(String[] args) {
         String[] strArray = {"1", "2", "3", "4", "5"};
         StringBuilder sb = new StringBuilder();

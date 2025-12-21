@@ -1,12 +1,11 @@
 package com.basejava.storage;
 
+import com.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.basejava.model.Resume;
-
 public class ListStorage extends AbstractStorage<Integer> {
-
+    
     private final List<Resume> storage = new ArrayList<>();
 
     @Override

@@ -12,6 +12,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MainConcurrency {
+    
     public static final int THREADS_NUMBER = 10000;
     //    private int counter;
     private final AtomicInteger atomicCounter = new AtomicInteger();
@@ -20,9 +21,9 @@ public class MainConcurrency {
     //    private static final Lock lock = new ReentrantLock();
     private static final ReentrantReadWriteLock REENTRANT_READ_WRITE_LOCK = new ReentrantReadWriteLock();
     @SuppressWarnings("unused")
-	private static final Lock WRITE_LOCK = REENTRANT_READ_WRITE_LOCK.writeLock();
+    private static final Lock WRITE_LOCK = REENTRANT_READ_WRITE_LOCK.writeLock();
     @SuppressWarnings("unused")
-	private static final Lock READ_LOCK = REENTRANT_READ_WRITE_LOCK.readLock();
+    private static final Lock READ_LOCK = REENTRANT_READ_WRITE_LOCK.readLock();
     private static final ThreadLocal<SimpleDateFormat> THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
@@ -43,14 +44,14 @@ public class MainConcurrency {
         thread0.start();
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                System.out.println(Thread.currentThread().getName() + ", " + Thread.currentThread().getState());
+                System.out.println(Thread.currentThread().getName() +
+                        ", " + Thread.currentThread().getState());
             }
 
             @SuppressWarnings("unused")
-			private void inc() {
+            private void inc() {
                 synchronized (this) {
                 //                    counter++;
                 }
@@ -61,16 +62,14 @@ public class MainConcurrency {
 
         final MainConcurrency mainConcurrency = new MainConcurrency();
         CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ExecutorService executorService =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         //        CompletionService completionService = new ExecutorCompletionService(executorService);
         //        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
-
+        
         for (int i = 0; i < THREADS_NUMBER; i++) {
-
             @SuppressWarnings("unused")
-			Future<Integer> future = executorService.submit(() ->
-            //            Thread thread = new Thread(() ->
-            {
+            Future<Integer> future = executorService.submit(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
                     System.out.println(THREAD_LOCAL.get().format(new Date()));
@@ -103,7 +102,7 @@ public class MainConcurrency {
     }
 
     @SuppressWarnings("unused")
-	private static void deadLock(Object lock1, Object lock2) {
+    private static void deadLock(Object lock1, Object lock2) {
         new Thread(() -> {
             System.out.println("Waiting " + lock1);
             synchronized (lock1) {

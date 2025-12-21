@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class CompanySection extends Section {
-
+    
     @Serial
     private static final long serialVersionUID = 1L;
     private final List<Company> companies = new ArrayList<>();

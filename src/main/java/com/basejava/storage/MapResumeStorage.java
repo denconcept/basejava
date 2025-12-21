@@ -1,14 +1,13 @@
 package com.basejava.storage;
 
+import com.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.basejava.model.Resume;
-
 public class MapResumeStorage extends AbstractStorage<Resume> {
-
+    
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override

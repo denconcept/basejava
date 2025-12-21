@@ -1,15 +1,14 @@
 package com.basejava.util;
 
-import java.io.Reader;
-import java.io.Writer;
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import java.io.Reader;
+import java.io.Writer;
 
 public class XmlParser {
-
+    
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
 
@@ -36,7 +35,7 @@ public class XmlParser {
     }
 
     @SuppressWarnings("unchecked")
-	public <T> T unmarshall(Reader reader) {
+    public <T> T unmarshall(Reader reader) {
         try {
             return (T) unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {

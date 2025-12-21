@@ -1,13 +1,11 @@
 package com.basejava.sql;
 
+import com.basejava.exception.StorageException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.basejava.exception.StorageException;
-
 public class SqlHelper {
-
     private final ConnectionFactory connection;
 
     public SqlHelper(ConnectionFactory connection) {
