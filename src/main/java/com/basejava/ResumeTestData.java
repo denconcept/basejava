@@ -25,13 +25,13 @@ public class ResumeTestData {
         for (int i = 0; i < contactTypes.length; i++) {
             resume.addContact(contactTypes[i], getContacts()[i]);
         }
-        /* String[] textContent = getTexts();
+        String[] textContent = getTexts();
         for (int i = 0; i < textContent.length; i++) {
             resume.addSection(SectionType.values()[i], new TextSection(textContent[i]));
         }
         resume.addSection(SectionType.ACHIEVEMENT, getAchievements());
         resume.addSection(SectionType.QUALIFICATIONS, getQualifications());
-        resume.addSection(SectionType.EXPERIENCE, createCompanySection(getExperience()));
+        /* resume.addSection(SectionType.EXPERIENCE, createCompanySection(getExperience()));
         resume.addSection(SectionType.EDUCATION, createCompanySection(getEducation())); */
         return resume;
     }
@@ -69,8 +69,7 @@ public class ResumeTestData {
                         "Пурист кода и архитектуры."
         };
     }
-    
-    @SuppressWarnings("unused")
+
     private static ListSection getAchievements() {
         String[] achievement = {
                 "– Организация команды и успешная реализация Java проектов для сторонних заказчиков: " +
@@ -108,7 +107,6 @@ public class ResumeTestData {
         return new ListSection(Arrays.asList(achievement));
     }
 
-    @SuppressWarnings("unused")
     private static ListSection getQualifications() {
         String[] qualifications = {
                 "– JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
