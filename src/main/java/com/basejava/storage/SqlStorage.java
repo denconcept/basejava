@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,25 +23,28 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute(
-                " SELECT * FROM resume r " +
-                        " LEFT JOIN contact c " +
-                        "        ON r.uuid = c.resume_uuid " +
-                        "  ORDER BY full_name, uuid",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> map = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        Resume resume = map.get(uuid);
-                        if (resume == null) {
-                            resume = new Resume(uuid, rs.getString("full_name"));
-                            map.put(uuid, resume);
-                        }
+        List<Resume> resumes = sqlHelper.execute("SELECT * FROM resume ORDER BY uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            List<Resume> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            }
+            return list;
+        });
+        sqlHelper.execute("SELECT * FROM contact ORDER BY resume_uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("resume_uuid");
+                for (Resume resume : resumes) {
+                    if (uuid.equals(resume.getUuid())) {
                         addContacts(rs, resume);
                     }
-                    return new ArrayList<>(map.values());
-                });
+                }
+            }
+            return null;
+        });
+        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        return resumes;
     }
 
     @Override
