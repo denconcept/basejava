@@ -27,22 +27,8 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected List<Resume> doCopyAll() {
-        List<Resume> resumes = new ArrayList<>();
-        for (File file : getListFiles()) {
-            Resume resume = doGet(file);
-            resumes.add(resume);
-        }
-        return resumes;
-    }
-
-    @Override
-    protected Resume doGet(File searchKey) {
-        try {
-            return streamSerializer.doRead(searchKey.toPath());
-        } catch (IOException | ClassNotFoundException e) {
-            throw new StorageException("File read error ", searchKey.getName(), e);
-        }
+    public int size() {
+        return getListFiles().length;
     }
 
     @Override
@@ -56,10 +42,22 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected void doDelete(File searchKey) {
-        if (!searchKey.delete()) {
-            throw new StorageException("File delete error ", searchKey.getName());
+    protected Resume doGet(File searchKey) {
+        try {
+            return streamSerializer.doRead(searchKey.toPath());
+        } catch (IOException | ClassNotFoundException e) {
+            throw new StorageException("File read error ", searchKey.getName(), e);
         }
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        List<Resume> resumes = new ArrayList<>();
+        for (File file : getListFiles()) {
+            Resume resume = doGet(file);
+            resumes.add(resume);
+        }
+        return resumes;
     }
 
     @Override
@@ -68,6 +66,13 @@ public class FileStorage extends AbstractStorage<File> {
             streamSerializer.doWrite(searchKey.toPath(), resume);
         } catch (IOException e) {
             throw new StorageException("File write error ", searchKey.getName(), e);
+        }
+    }
+
+    @Override
+    protected void doDelete(File searchKey) {
+        if (!searchKey.delete()) {
+            throw new StorageException("File delete error ", searchKey.getName());
         }
     }
 
@@ -86,11 +91,6 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected boolean isExist(File searchKey) {
         return searchKey.exists();
-    }
-
-    @Override
-    public int size() {
-        return getListFiles().length;
     }
 
     private File[] getListFiles() {

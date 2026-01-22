@@ -12,13 +12,12 @@ public abstract class AbstractStorage<SKT> implements Storage {
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
     private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
-
+    
     @Override
-    public List<Resume> getAllSorted() {
-        LOG.info("getAllSorted");
-        List<Resume> resumes = doCopyAll();
-        resumes.sort(RESUME_COMPARATOR);
-        return resumes;
+    public void save(Resume r) {
+        LOG.info("Save " + r);
+        SKT searchKey = getNotExistingSearchKey(r.getUuid());
+        doSave(searchKey, r);
     }
 
     @Override
@@ -29,17 +28,11 @@ public abstract class AbstractStorage<SKT> implements Storage {
     }
 
     @Override
-    public void save(Resume r) {
-        LOG.info("Save " + r);
-        SKT searchKey = getNotExistingSearchKey(r.getUuid());
-        doSave(searchKey, r);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        LOG.info("Delete " + uuid);
-        SKT searchKey = getExistingSearchKey(uuid);
-        doDelete(searchKey);
+    public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
+        List<Resume> resumes = doCopyAll();
+        resumes.sort(RESUME_COMPARATOR);
+        return resumes;
     }
 
     @Override
@@ -50,20 +43,27 @@ public abstract class AbstractStorage<SKT> implements Storage {
     }
 
     @Override
+    public void delete(String uuid) {
+        LOG.info("Delete " + uuid);
+        SKT searchKey = getExistingSearchKey(uuid);
+        doDelete(searchKey);
+    }
+
+    @Override
     public void clear() {
         doClear();
         System.out.println("\nStorage was cleared");
     }
 
-    protected abstract List<Resume> doCopyAll();
+    protected abstract void doSave(SKT searchKey, Resume r);
 
     protected abstract Resume doGet(SKT searchKey);
 
-    protected abstract void doSave(SKT searchKey, Resume r);
-
-    protected abstract void doDelete(SKT searchKey);
+    protected abstract List<Resume> doCopyAll();
 
     protected abstract void doUpdate(SKT searchKey, Resume r);
+
+    protected abstract void doDelete(SKT searchKey);
 
     protected abstract void doClear();
 

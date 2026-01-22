@@ -5,17 +5,17 @@ import java.util.List;
 
 public interface Storage {
     
-    List<Resume> getAllSorted();
-
+    void save(Resume r);
+    
     Resume get(String uuid);
-
+    
+    List<Resume> getAllSorted();
+    
     int size();
 
-    void save(Resume r);
+    void update(Resume r);
 
     void delete(String uuid);
-
-    void update(Resume r);
 
     void clear();
 }

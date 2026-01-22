@@ -11,18 +11,8 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
-    public List<Resume> doCopyAll() {
-        return new ArrayList<>(storage.values());
-    }
-
-    @Override
     public int size() {
         return storage.size();
-    }
-
-    @Override
-    protected Resume doGet(Resume searchKey) {
-        return searchKey;
     }
 
     @Override
@@ -31,8 +21,13 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected void doDelete(Resume searchKey) {
-        storage.remove((searchKey).getUuid());
+    protected Resume doGet(Resume searchKey) {
+        return searchKey;
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
@@ -41,17 +36,22 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
+    protected void doDelete(Resume searchKey) {
+        storage.remove((searchKey).getUuid());
+    }
+
+    @Override
     protected void doClear() {
         storage.clear();
     }
 
     @Override
-    protected boolean isExist(Resume searchKey) {
-        return searchKey != null;
+    protected Resume getSearchKey(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
-    protected Resume getSearchKey(String uuid) {
-        return storage.get(uuid);
+    protected boolean isExist(Resume searchKey) {
+        return searchKey != null;
     }
 }

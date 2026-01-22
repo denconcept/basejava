@@ -13,19 +13,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected int size = 0;
 
     @Override
-    public List<Resume> doCopyAll() {
-        Resume[] resumes = Arrays.copyOf(storage, size);
-        return new ArrayList<>(Arrays.asList(resumes));
-    }
-
-    @Override
     public int size() {
         return size;
-    }
-
-    @Override
-    protected Resume doGet(Integer searchKey) {
-        return storage[searchKey];
     }
 
     @Override
@@ -38,15 +27,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected final void doDelete(Integer searchKey) {
-        size--;
-        fillGap(searchKey);
-        storage[size] = null;
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        Resume[] resumes = Arrays.copyOf(storage, size);
+        return new ArrayList<>(Arrays.asList(resumes));
     }
 
     @Override
     protected final void doUpdate(Integer searchKey, Resume resume) {
         storage[searchKey] = resume;
+    }
+
+    @Override
+    protected final void doDelete(Integer searchKey) {
+        size--;
+        fillGap(searchKey);
+        storage[size] = null;
     }
 
     @Override

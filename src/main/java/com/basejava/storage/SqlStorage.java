@@ -26,50 +26,20 @@ public class SqlStorage implements Storage {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
-    /* @Override
-    public List<Resume> getAllSorted() {
-        return sqlHelper.execute(
-                        "    SELECT * FROM resume r " +
-                        " LEFT JOIN contact c " +
-                        "        ON r.uuid = c.resume_uuid " +
-                        "  ORDER BY full_name, uuid",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> map = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        Resume resume = map.get(uuid);
-                        if (resume == null) {
-                            resume = new Resume(uuid, rs.getString("full_name"));
-                            map.put(uuid, resume);
-                        }
-                        addContacts(rs, resume);
-                    }
-                    return new ArrayList<>(map.values());
-                });
-    }*/
-    
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> resumes = sqlHelper.execute("SELECT * FROM resume", ps -> {
-            ResultSet rs = ps.executeQuery();
-            List<Resume> newResumes = new ArrayList<>();
-            while (rs.next()) {
-                newResumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+    public void save(Resume resume) {
+        sqlHelper.transactionalExecute(connection -> {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, resume.getFullName());
+                ps.execute();
             }
-            return newResumes;
+            insertContacts(connection, resume);
+            insertTextSections(connection, resume);
+            insertListSections(connection, resume);
+            return null;
         });
-        sqlHelper.fillResumes("SELECT * FROM contact", resumes,
-                (resume, type, value) -> resume.addContact(ContactType.valueOf(type), value));
-        sqlHelper.fillResumes("SELECT * FROM section WHERE type IN ('OBJECTIVE', 'PERSONAL')", resumes,
-                (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
-                        new TextSection(value)));
-        sqlHelper.fillResumes(
-                "SELECT * FROM section WHERE type IN ('ACHIEVEMENT', 'QUALIFICATIONS')", resumes,
-                (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
-                        new ListSection(List.of(value.split("\n")))));
-        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
-        return resumes;
     }
     
     @Override
@@ -94,39 +64,35 @@ public class SqlStorage implements Storage {
                         new ListSection(List.of(value.split("\n")))));
         return resume;
     }
+    
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> resumes = sqlHelper.execute("SELECT * FROM resume", ps -> {
+            ResultSet rs = ps.executeQuery();
+            List<Resume> newResumes = new ArrayList<>();
+            while (rs.next()) {
+                newResumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            }
+            return newResumes;
+        });
+        sqlHelper.fillResumes("SELECT * FROM contact", resumes,
+                (resume, type, value) -> resume.addContact(ContactType.valueOf(type), value));
+        sqlHelper.fillResumes("SELECT * FROM section WHERE type IN ('OBJECTIVE', 'PERSONAL')", resumes,
+                (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
+                        new TextSection(value)));
+        sqlHelper.fillResumes(
+                "SELECT * FROM section WHERE type IN ('ACHIEVEMENT', 'QUALIFICATIONS')", resumes,
+                (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
+                        new ListSection(List.of(value.split("\n")))));
+        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        return resumes;
+    }
 
     @Override
     public int size() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
             return rs.next() ? rs.getInt(1) : 0;
-        });
-    }
-
-    @Override
-    public void save(Resume resume) {
-        sqlHelper.transactionalExecute(connection -> {
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
-                ps.setString(1, resume.getUuid());
-                ps.setString(2, resume.getFullName());
-                ps.execute();
-            }
-            insertContacts(connection, resume);
-            insertTextSections(connection, resume);
-            insertListSections(connection, resume);
-            return null;
-        });
-    }
-
-    @Override
-    public void delete(String uuid) {
-        sqlHelper.execute("DELETE FROM resume WHERE uuid = ?", ps -> {
-            ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
-            return null;
         });
     }
     
@@ -147,6 +113,17 @@ public class SqlStorage implements Storage {
             insertTextSections(connection, resume);
             deleteListSections(connection, resume);
             insertListSections(connection, resume);
+            return null;
+        });
+    }
+
+    @Override
+    public void delete(String uuid) {
+        sqlHelper.execute("DELETE FROM resume WHERE uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
             return null;
         });
     }

@@ -27,22 +27,8 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected List<Resume> doCopyAll() {
-        List<Resume> resumes = new ArrayList<>();
-        for (Path path : getListPaths()) {
-            Resume resume = doGet(path);
-            resumes.add(resume);
-        }
-        return resumes;
-    }
-
-    @Override
-    protected Resume doGet(Path searchKey) {
-        try {
-            return streamSerializer.doRead(searchKey);
-        } catch (IOException | ClassNotFoundException e) {
-            throw new StorageException("Path read error ", getFileName(searchKey), e);
-        }
+    public int size() {
+        return getListPaths().size();
     }
 
     @Override
@@ -57,12 +43,22 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected void doDelete(Path searchKey) {
+    protected Resume doGet(Path searchKey) {
         try {
-            Files.delete(searchKey);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error ", getFileName(searchKey), e);
+            return streamSerializer.doRead(searchKey);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new StorageException("Path read error ", getFileName(searchKey), e);
         }
+    }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        List<Resume> resumes = new ArrayList<>();
+        for (Path path : getListPaths()) {
+            Resume resume = doGet(path);
+            resumes.add(resume);
+        }
+        return resumes;
     }
 
     @Override
@@ -71,6 +67,15 @@ public class PathStorage extends AbstractStorage<Path> {
             streamSerializer.doWrite(searchKey, resume);
         } catch (IOException e) {
             throw new StorageException("Path write error ", getFileName(searchKey), e);
+        }
+    }
+
+    @Override
+    protected void doDelete(Path searchKey) {
+        try {
+            Files.delete(searchKey);
+        } catch (IOException e) {
+            throw new StorageException("Path delete error ", getFileName(searchKey), e);
         }
     }
 
@@ -87,11 +92,6 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected boolean isExist(Path searchKey) {
         return Files.exists(searchKey);
-    }
-
-    @Override
-    public int size() {
-        return getListPaths().size();
     }
 
     private List<Path> getListPaths() {
