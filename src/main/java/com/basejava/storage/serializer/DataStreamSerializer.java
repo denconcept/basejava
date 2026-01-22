@@ -1,12 +1,12 @@
 package com.basejava.storage.serializer;
 
+import com.basejava.model.AbstractSection;
 import com.basejava.model.Company;
 import com.basejava.model.CompanySection;
 import com.basejava.model.ContactType;
 import com.basejava.model.Link;
 import com.basejava.model.ListSection;
 import com.basejava.model.Resume;
-import com.basejava.model.Section;
 import com.basejava.model.SectionType;
 import com.basejava.model.TextSection;
 import java.io.DataInputStream;
@@ -32,10 +32,10 @@ public class DataStreamSerializer implements StreamSerializer {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
-            Map<SectionType, Section> sections = resume.getSections();
+            Map<SectionType, AbstractSection> sections = resume.getSections();
             writeWithException(dos, sections.entrySet(), entry -> {
                 SectionType key = entry.getKey();
-                Section section = entry.getValue();
+                AbstractSection section = entry.getValue();
                 dos.writeUTF(key.name());
                 switch (key) {
                     case OBJECTIVE, PERSONAL -> writeTextSections(dos, section);
@@ -47,16 +47,16 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void writeTextSections(DataOutputStream dos, Section section) throws IOException {
+    private void writeTextSections(DataOutputStream dos, AbstractSection section) throws IOException {
         dos.writeUTF(((TextSection) section).getDescription());
     }
 
-    private void writeListSections(DataOutputStream dos, Section section) throws IOException {
+    private void writeListSections(DataOutputStream dos, AbstractSection section) throws IOException {
         List<String> items = ((ListSection) section).getDescription();
         writeWithException(dos, items, dos::writeUTF);
     }
 
-    private void writeCompanySections(DataOutputStream dos, Section section) throws IOException {
+    private void writeCompanySections(DataOutputStream dos, AbstractSection section) throws IOException {
         List<Company> companies = ((CompanySection) section).getCompanies();
         writeWithException(dos, companies, company -> {
             writeLink(dos, company);

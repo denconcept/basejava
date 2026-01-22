@@ -1,10 +1,10 @@
 package com.basejava.storage;
 
 import com.basejava.exception.NotExistStorageException;
+import com.basejava.model.AbstractSection;
 import com.basejava.model.ContactType;
 import com.basejava.model.ListSection;
 import com.basejava.model.Resume;
-import com.basejava.model.Section;
 import com.basejava.model.SectionType;
 import com.basejava.model.TextSection;
 import com.basejava.sql.SqlHelper;
@@ -181,7 +181,7 @@ public class SqlStorage implements Storage {
             throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
-            for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
+            for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 if (e.getKey() == SectionType.OBJECTIVE || e.getKey() == SectionType.PERSONAL) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, e.getKey().toString());
@@ -205,7 +205,7 @@ public class SqlStorage implements Storage {
             throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
-            for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
+            for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 if (e.getKey() == SectionType.ACHIEVEMENT || e.getKey() == SectionType.QUALIFICATIONS) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, e.getKey().toString());
