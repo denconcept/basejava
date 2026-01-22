@@ -30,7 +30,11 @@ public class SqlStorage implements Storage {
     public void save(Resume resume) {
         sqlHelper.transactionalExecute(connection -> {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO resume (uuid, full_name) VALUES (?, ?)")) {
+                    """
+                    INSERT
+                      INTO resume (uuid, full_name)
+                    VALUES (?, ?)
+                    """)) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, resume.getFullName());
                 ps.execute();
@@ -44,44 +48,87 @@ public class SqlStorage implements Storage {
     
     @Override
     public Resume get(String uuid) {
-        Resume resume = sqlHelper.execute("SELECT * FROM resume WHERE uuid = ?", ps -> {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                throw new NotExistStorageException(uuid);
-            }
-            return new Resume(uuid, rs.getString("full_name"));
-        });
-        sqlHelper.fillResume("SELECT * FROM contact WHERE resume_uuid = ?", resume,
+        Resume resume = sqlHelper.execute(
+                """
+                SELECT *
+                  FROM resume
+                 WHERE uuid = ?
+                """,
+                ps -> {
+                    ps.setString(1, uuid);
+                    ResultSet rs = ps.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    return new Resume(uuid, rs.getString("full_name"));
+                });
+        sqlHelper.fillResume(
+                """
+                SELECT *
+                  FROM contact
+                 WHERE resume_uuid = ?
+                """, resume,
                 (resumeForFill, type, value) -> resumeForFill.addContact(ContactType.valueOf(type), value));
         sqlHelper.fillResume(
-                "SELECT * FROM section WHERE resume_uuid = ? AND type IN ('OBJECTIVE', 'PERSONAL')", resume,
+                """
+                SELECT *
+                  FROM section
+                 WHERE resume_uuid = ?
+                   AND type
+                    IN ('OBJECTIVE', 'PERSONAL')
+                """, resume,
                 (resumeForFill, type, value) -> resumeForFill.addSection(SectionType.valueOf(type),
                         new TextSection(value)));
         sqlHelper.fillResume(
-                "SELECT * FROM section WHERE resume_uuid = ? AND type IN ('ACHIEVEMENT', 'QUALIFICATIONS')",
-                resume, (resumeForFill, type, value) -> resumeForFill.addSection(SectionType.valueOf(type),
+                """
+                SELECT *
+                  FROM section
+                 WHERE resume_uuid = ?
+                   AND type
+                    IN ('ACHIEVEMENT', 'QUALIFICATIONS')
+                """, resume,
+                (resumeForFill, type, value) -> resumeForFill.addSection(SectionType.valueOf(type),
                         new ListSection(List.of(value.split("\n")))));
         return resume;
     }
     
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = sqlHelper.execute("SELECT * FROM resume", ps -> {
-            ResultSet rs = ps.executeQuery();
-            List<Resume> newResumes = new ArrayList<>();
-            while (rs.next()) {
-                newResumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
-            }
-            return newResumes;
-        });
-        sqlHelper.fillResumes("SELECT * FROM contact", resumes,
+        List<Resume> resumes = sqlHelper.execute(
+                """
+                SELECT *
+                  FROM resume
+                """,
+                ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    List<Resume> newResumes = new ArrayList<>();
+                    while (rs.next()) {
+                        newResumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                    }
+                    return newResumes;
+                });
+        sqlHelper.fillResumes(
+                """
+                SELECT *
+                  FROM contact
+                """, resumes,
                 (resume, type, value) -> resume.addContact(ContactType.valueOf(type), value));
-        sqlHelper.fillResumes("SELECT * FROM section WHERE type IN ('OBJECTIVE', 'PERSONAL')", resumes,
+        sqlHelper.fillResumes(
+                """
+                SELECT *
+                  FROM section
+                 WHERE type
+                    IN ('OBJECTIVE', 'PERSONAL')
+                """, resumes,
                 (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
                         new TextSection(value)));
         sqlHelper.fillResumes(
-                "SELECT * FROM section WHERE type IN ('ACHIEVEMENT', 'QUALIFICATIONS')", resumes,
+                """
+                SELECT *
+                  FROM section
+                 WHERE type
+                    IN ('ACHIEVEMENT', 'QUALIFICATIONS')
+                """, resumes,
                 (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
                         new ListSection(List.of(value.split("\n")))));
         resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
@@ -90,17 +137,27 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt(1) : 0;
-        });
+        return sqlHelper.execute(
+                """
+                SELECT
+                 COUNT(*)
+                  FROM resume
+                """,
+                ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    return rs.next() ? rs.getInt(1) : 0;
+                });
     }
     
     @Override
     public void update(Resume resume) {
         sqlHelper.transactionalExecute(connection -> {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                    """
+                    UPDATE resume
+                       SET full_name = ?
+                     WHERE uuid = ?
+                    """)) {
                 ps.setString(1, resume.getFullName());
                 ps.setString(2, resume.getUuid());
                 if (ps.executeUpdate() == 0) {
@@ -119,23 +176,37 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        sqlHelper.execute("DELETE FROM resume WHERE uuid = ?", ps -> {
-            ps.setString(1, uuid);
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(uuid);
-            }
-            return null;
-        });
+        sqlHelper.execute(
+                """
+                DELETE
+                  FROM resume
+                 WHERE uuid = ?
+                """,
+                ps -> {
+                    ps.setString(1, uuid);
+                    if (ps.executeUpdate() == 0) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    return null;
+                });
     }
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume");
+        sqlHelper.execute(
+                """
+                DELETE
+                  FROM resume
+                """);
     }
     
     private void insertContacts(Connection connection, Resume resume) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+                """
+                INSERT
+                  INTO contact (resume_uuid, type, value)
+                VALUES (?,?,?)
+                """)) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, e.getKey().toString());
@@ -148,7 +219,11 @@ public class SqlStorage implements Storage {
     
     private void deleteContacts(Connection connection, Resume resume) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM contact WHERE resume_uuid = ?")) {
+                """
+                DELETE
+                  FROM contact
+                 WHERE resume_uuid = ?
+                """)) {
             ps.setString(1, resume.getUuid());
             ps.executeUpdate();
         }
@@ -157,7 +232,11 @@ public class SqlStorage implements Storage {
     private void insertTextSections(Connection connection, Resume resume)
             throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+                """
+                INSERT
+                  INTO section (resume_uuid, type, value)
+                VALUES (?,?,?)
+                """)) {
             for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 if (e.getKey() == SectionType.OBJECTIVE || e.getKey() == SectionType.PERSONAL) {
                     ps.setString(1, resume.getUuid());
@@ -172,7 +251,13 @@ public class SqlStorage implements Storage {
     
     private void deleteTextSections(Connection connection, Resume resume) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM section WHERE resume_uuid = ? AND type IN ('OBJECTIVE', 'PERSONAL')")) {
+                """
+                DELETE
+                  FROM section
+                 WHERE resume_uuid = ?
+                   AND type
+                    IN ('OBJECTIVE', 'PERSONAL')
+                """)) {
             ps.setString(1, resume.getUuid());
             ps.executeUpdate();
         }
@@ -181,7 +266,11 @@ public class SqlStorage implements Storage {
     private void insertListSections(Connection connection, Resume resume)
             throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+                """
+                INSERT
+                  INTO section (resume_uuid, type, value) 
+                VALUES (?,?,?)
+                """)) {
             for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 if (e.getKey() == SectionType.ACHIEVEMENT || e.getKey() == SectionType.QUALIFICATIONS) {
                     ps.setString(1, resume.getUuid());
@@ -196,7 +285,13 @@ public class SqlStorage implements Storage {
     
     private void deleteListSections(Connection connection, Resume resume) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM section WHERE resume_uuid = ? AND type IN ('ACHIEVEMENT', 'QUALIFICATIONS')")) {
+                """
+                DELETE
+                  FROM section
+                 WHERE resume_uuid = ?
+                   AND type
+                    IN ('ACHIEVEMENT', 'QUALIFICATIONS')
+                """)) {
             ps.setString(1, resume.getUuid());
             ps.executeUpdate();
         }
