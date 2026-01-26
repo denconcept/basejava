@@ -3,15 +3,12 @@ package com.basejava.storage;
 import com.basejava.exception.ExistStorageException;
 import com.basejava.exception.NotExistStorageException;
 import com.basejava.model.Resume;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractStorage<SKT> implements Storage {
     
     private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
-    private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName)
-            .thenComparing(Resume::getUuid);
     
     @Override
     public void save(Resume r) {
@@ -31,7 +28,7 @@ public abstract class AbstractStorage<SKT> implements Storage {
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
         List<Resume> resumes = doCopyAll();
-        resumes.sort(RESUME_COMPARATOR);
+        resumes.sort(Resume.COMPARATOR);
         return resumes;
     }
 

@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>, Serializable {
     
     @Serial
+    public static final Comparator<Resume> COMPARATOR = Comparator.comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
     private static final long serialVersionUID = 1L;
     private String uuid;
     private String fullName;
@@ -94,7 +97,6 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     @Override
     public int compareTo(Resume o) {
-        int cmp = fullName.compareTo(o.fullName);
-        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
+        return COMPARATOR.compare(this, o);
     }
 }

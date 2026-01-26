@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +130,7 @@ public class SqlStorage implements Storage {
                 """, resumes,
                 (resume, type, value) -> resume.addSection(SectionType.valueOf(type),
                         new ListSection(List.of(value.split("\n")))));
-        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        resumes.sort(Resume.COMPARATOR);
         return resumes;
     }
 
