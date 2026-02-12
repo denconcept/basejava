@@ -1,6 +1,10 @@
 package com.basejava.webapp.storage;
 
-import static com.basejava.ResumeTestData.createResume;
+import static com.basejava.TestData.RESUME_1;
+import static com.basejava.TestData.RESUME_2;
+import static com.basejava.TestData.RESUME_3;
+import static com.basejava.TestData.RESUME_4;
+import static com.basejava.TestData.UUID_3;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -16,7 +20,6 @@ import com.basejava.storage.serializer.StreamSerializer;
 import com.basejava.storage.serializer.XmlStreamSerializer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractStorageTest {
@@ -27,27 +30,6 @@ public abstract class AbstractStorageTest {
     protected static final StreamSerializer JSON_STREAM_SERIALIZER = new JsonStreamSerializer();
     protected static final StreamSerializer DATA_STREAM_SERIALIZER = new DataStreamSerializer();
     protected final Storage storage;
-
-    private static final String UUID_1 = UUID.randomUUID().toString();
-    private static final String UUID_2 = UUID.randomUUID().toString();
-    private static final String UUID_3 = UUID.randomUUID().toString();
-    private static final String UUID_4 = UUID.randomUUID().toString();
-    protected static final Resume RESUME_1;
-    protected static final Resume RESUME_2;
-    protected static final Resume RESUME_3;
-    protected static final Resume RESUME_4;
-
-    static {
-        RESUME_1 = createResume(UUID_1, "Name1");
-        RESUME_2 = createResume(UUID_2, "Name2");
-        RESUME_3 = createResume(UUID_3, "Name3");
-        RESUME_4 = createResume(UUID_4, "Name4");
-
-        /* RESUME_1 = new Resume(UUID_1, "Name1");
-        RESUME_2 = new Resume(UUID_2, "Name2");
-        RESUME_3 = new Resume(UUID_3, "Name3");
-        RESUME_4 = new Resume(UUID_4, "Name4");*/
-    }
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
