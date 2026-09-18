@@ -94,7 +94,9 @@ public class Company implements Serializable {
 
         public String getPeriod() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
-            return startDate.format(formatter) + " – " + endDate.format(formatter) + "\t";
+            return (endDate.equals(LocalDate.now()) ?
+                    startDate.format(formatter) + " – Сейчас\t" :
+                    startDate.format(formatter) + " – " + endDate.format(formatter) + "\t");
         }
 
         public String getTitle() {
