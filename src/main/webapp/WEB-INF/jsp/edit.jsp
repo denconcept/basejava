@@ -2,6 +2,7 @@
 <%@ page import="com.basejava.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -49,23 +50,27 @@
                 <c:forEach var="company" items="${resume.getSection(type).getCompanies()}">
                     <br>
                     <dl>
-                        <dd><input type="text" name="companyTitle" size="100" value="${company.homePage.title}"></dd>
+                        <dd><input type="text" name="${type.name()}_companyTitle" size="100"
+                                   value="${company.homePage.title}"></dd>
                     </dl>
                     <dl>
-                        <dd><input type="text" name="companyUrl" size="100" value="${company.homePage.url}"></dd>
+                        <dd><input type="text" name="${type.name()}_companyUrl" size="100"
+                                   value="${company.homePage.url}"></dd>
                     </dl>
+                    <input type="hidden" name="${type.name()}_periodCount" value="${fn:length(company.periods)}">
                     <c:forEach var="period" items="${company.periods}">
                         <dl>
-                            <dd><input type="text" name="period" size="20" value="${period.period}"></dd>
+                            <dd><input type="text" name="${type.name()}_periodDates" size="20"
+                                       value="${period.period}"></dd>
                         </dl>
                         <dl>
-                            <dd><input type="text" name="periodTitle" size="100" value="${period.title}"></dd>
+                            <dd><input type="text" name="${type.name()}_periodTitle" size="100"
+                                       value="${period.title}"></dd>
                         </dl>
-                        <c:if test="${not empty period.description}">
-                            <dl>
-                                <dd><input type="text" name="periodDescription" size="200" value="${period.description}"></dd>
-                            </dl>
-                        </c:if>
+                        <dl>
+                            <dd><input type="text" name="${type.name()}_periodDescription" size="200"
+                                       value="${period.description}"></dd>
+                        </dl>
                     </c:forEach>
                 </c:forEach>
             </c:if>
@@ -73,7 +78,7 @@
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="button" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
