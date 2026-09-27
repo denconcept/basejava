@@ -4,3 +4,11 @@ resumes.properties
 lib/
 out/
 target/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Storage contents
+storage/*
+!storage/.gitkeep
