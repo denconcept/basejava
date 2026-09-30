@@ -9,10 +9,12 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.basejava.util.DateUtil.FORMATTER;
+import static com.basejava.util.DateUtil.NOW;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
@@ -92,11 +94,18 @@ public class Company implements Serializable {
             return endDate;
         }
 
+        public String getFormatedStartDate() {
+            return startDate.format(FORMATTER);
+        }
+
+        public String getFormatedEndDate() {
+            return endDate.format(FORMATTER);
+        }
+
         public String getPeriod() {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
-            return (endDate.equals(LocalDate.now()) ?
-                    startDate.format(formatter) + " – Сейчас\t" :
-                    startDate.format(formatter) + " – " + endDate.format(formatter) + "\t");
+            return (endDate.equals(NOW) ?
+                    startDate.format(FORMATTER) + " – Сейчас\t" :
+                    startDate.format(FORMATTER) + " – " + endDate.format(FORMATTER) + "\t");
         }
 
         public String getTitle() {

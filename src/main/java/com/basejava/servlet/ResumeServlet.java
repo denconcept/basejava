@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.basejava.util.DateUtil.NOW;
+
 @WebServlet("/resume")
 public class ResumeServlet extends HttpServlet {
 
@@ -77,7 +79,8 @@ public class ResumeServlet extends HttpServlet {
                     String[] companyTitles = request.getParameterValues(type.name() + "_companyTitle");
                     String[] companyUrls = request.getParameterValues(type.name() + "_companyUrl");
                     String[] periodCounts = request.getParameterValues(type.name() + "_periodCount");
-                    String[] periodDates = request.getParameterValues(type.name() + "_periodDates");
+                    String[] periodStart = request.getParameterValues(type.name() + "_periodStart");
+                    String[] periodEnd = request.getParameterValues(type.name() + "_periodEnd");
                     String[] periodTitles = request.getParameterValues(type.name() + "_periodTitle");
                     String[] periodDescriptions = request.getParameterValues(type.name() + "_periodDescription");
                     int periodIndex = 0;
@@ -87,13 +90,18 @@ public class ResumeServlet extends HttpServlet {
                             Company company = new Company(companyTitles[i], companyUrls[i]);
                             int count = Integer.parseInt(periodCounts[i]);
                             for (int j = 0; j < count; j++) {
-                                if (periodDates[periodIndex].isEmpty()) {
+                                if (periodStart[periodIndex].isEmpty() || periodEnd[periodIndex].isEmpty()) {
                                     periodIndex++;
                                     continue;
                                 }
-                                List<LocalDate> dates = parseDate(periodDates[periodIndex]);
-                                company.setPeriod(new Company.Period(dates.getFirst(), dates.getLast(),
-                                        periodTitles[periodIndex], periodDescriptions[periodIndex]));
+                                LocalDate startDate = parseDate(periodStart[periodIndex]);
+                                LocalDate endDate = parseDate(periodEnd[periodIndex]);
+                                company.setPeriod(
+                                        new Company.Period(
+                                                startDate,
+                                                endDate,
+                                                periodTitles[periodIndex],
+                                                periodDescriptions[periodIndex]));
                                 periodIndex++;
                             }
                             companies.add(company);
@@ -146,14 +154,9 @@ public class ResumeServlet extends HttpServlet {
         ).forward(request, response);
     }
 
-    private List<LocalDate> parseDate(String periodStr) {
-        String[] parts = periodStr.split(" – ");
-        String startStr = parts[0].trim();
-        String endStr = parts[1].trim();
-        LocalDate startDate = LocalDate.parse("01/" + startStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        LocalDate endDate = endStr.equals("Сейчас") ?
-                LocalDate.now() :
-                LocalDate.parse("01/" + endStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        return Arrays.asList(startDate, endDate);
+    private LocalDate parseDate(String dateStr) {
+        return dateStr.equals("Сейчас") ?
+                NOW :
+                LocalDate.parse("01/" + dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

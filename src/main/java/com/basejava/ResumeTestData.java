@@ -12,6 +12,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
+import static com.basejava.util.DateUtil.NOW;
+
 public class ResumeTestData {
     
     public static void main(String[] args) {
@@ -142,7 +144,7 @@ public class ResumeTestData {
             for (int i = 0; items.length - i != 2; i += 4) {
                 Company.Period period = new Company.Period(
                         formatDate(items[i + 2]),
-                        items[i + 3].equals("Сейчас") ? LocalDate.now() : formatDate(items[i + 3]),
+                        items[i + 3].equals("Сейчас") ? NOW : formatDate(items[i + 3]),
                         items[i + 4], items[i + 5]);
                 company.setPeriod(period);
             }
