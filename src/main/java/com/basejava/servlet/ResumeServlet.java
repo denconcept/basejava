@@ -32,8 +32,13 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
-        resume.setFullName(fullName);
+        Resume resume;
+        if (uuid == null || uuid.trim().isEmpty()) {
+            resume = new Resume(fullName);
+        } else {
+            resume = storage.get(uuid);
+            resume.setFullName(fullName);
+        }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && !value.trim().isEmpty()) {
@@ -102,8 +107,13 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        storage.update(resume);
-        response.sendRedirect("resume?uuid=" + uuid + "&action=view");
+        if (uuid == null) {
+            storage.save(resume);
+            response.sendRedirect("resume");
+        } else {
+            storage.update(resume);
+            response.sendRedirect("resume?uuid=" + uuid + "&action=view");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,6 +133,9 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 resume = storage.get(uuid);
+                break;
+            case "create":
+                resume = new Resume();
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
