@@ -30,18 +30,24 @@
         </c:if>
         <c:if test="${sectionEntry.key.name() == 'ACHIEVEMENT' || sectionEntry.key.name() == 'QUALIFICATIONS'}">
             <c:forEach var="description" items="${sectionEntry.value.description}">
-                ${description}<br>
+                <ul>
+                    <li>${description}</li>
+                </ul>
             </c:forEach>
         </c:if>
         <c:if test="${sectionEntry.key.name() == 'EXPERIENCE' || sectionEntry.key.name() == 'EDUCATION'}">
             <c:forEach var="company" items="${sectionEntry.value.companies}">
                 <a href="${company.homePage.url}">${company.homePage.title}</a><br>
                 <c:forEach var="period" items="${company.periods}">
-                    ${period.period}<br>
-                    ${period.title}
-                    <c:if test="${not empty period.description}">
-                        <br>${period.description}
-                    </c:if>
+                    <ul>
+                        <li>
+                                ${period.period}<br>
+                                ${period.title}<br>
+                            <c:if test="${not empty period.description}">
+                                ${period.description}
+                            </c:if>
+                        </li>
+                    </ul>
                 </c:forEach>
                 <br><br>
             </c:forEach>
