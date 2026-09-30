@@ -21,15 +21,13 @@
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" placeholder="ФИО"></dd>
         </dl>
-
-        <h3>Контакты:</h3>
+        <h3>Контакты</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"
                            placeholder="${type.title}"></dd>
             </dl>
         </c:forEach>
-
         <h3>Секции:</h3>
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <dl>

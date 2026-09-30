@@ -6,6 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,13 +19,14 @@ import static com.basejava.util.DateUtil.NOW;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
-    
+
     @Serial
     private static final long serialVersionUID = 1L;
     private Link homePage;
     private final List<Period> periods = new ArrayList<>();
 
-    public Company() {}
+    public Company() {
+    }
 
     public Company(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");
@@ -64,17 +66,21 @@ public class Company implements Serializable {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
+
         private static final long serialVersionUID = 1L;
+
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         @JsonAdapter(JsonLocalDateAdapter.class)
         private LocalDate startDate;
+
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         @JsonAdapter(JsonLocalDateAdapter.class)
         private LocalDate endDate;
         private String title;
         private String description;
 
-        public Period() {}
+        public Period() {
+        }
 
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");

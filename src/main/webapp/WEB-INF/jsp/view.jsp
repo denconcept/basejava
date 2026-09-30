@@ -37,7 +37,7 @@
         </c:if>
         <c:if test="${sectionEntry.key.name() == 'EXPERIENCE' || sectionEntry.key.name() == 'EDUCATION'}">
             <c:forEach var="company" items="${sectionEntry.value.companies}">
-                <a href="${company.homePage.url}">${company.homePage.title}</a><br>
+                <a href="${company.homePage.url}">${company.homePage.title}</a>
                 <c:forEach var="period" items="${company.periods}">
                     <ul>
                         <li>
@@ -49,7 +49,6 @@
                         </li>
                     </ul>
                 </c:forEach>
-                <br><br>
             </c:forEach>
         </c:if>
     </c:forEach>
