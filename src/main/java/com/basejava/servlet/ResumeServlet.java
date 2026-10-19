@@ -85,8 +85,12 @@ public class ResumeServlet extends HttpServlet {
                     List<Company> companies = new ArrayList<>();
                     if (companyTitles != null) {
                         for (int i = 0; i < companyTitles.length; i++) {
-                            Company company = new Company(companyTitles[i], companyUrls[i]);
                             int count = Integer.parseInt(periodCounts[i]);
+                            if (companyTitles[i].trim().isEmpty()) {
+                                periodIndex += count;
+                                continue;
+                            }
+                            Company company = new Company(companyTitles[i], companyUrls[i]);
                             for (int j = 0; j < count; j++) {
                                 if (periodStart[periodIndex].isEmpty()) {
                                     periodIndex++;
@@ -104,11 +108,11 @@ public class ResumeServlet extends HttpServlet {
                             }
                             companies.add(company);
                         }
-                        if (!companies.isEmpty()) {
-                            resume.addSection(type, new CompanySection(companies));
-                        } else {
-                            resume.getSections().remove(type);
-                        }
+                    }
+                    if (!companies.isEmpty()) {
+                        resume.addSection(type, new CompanySection(companies));
+                    } else {
+                        resume.getSections().remove(type);
                     }
                 }
             }
