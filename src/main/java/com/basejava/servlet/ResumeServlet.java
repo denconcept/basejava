@@ -12,11 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.basejava.util.DateUtil.NOW;
+import static com.basejava.util.DateUtil.parse;
 
 @WebServlet("/resume")
 public class ResumeServlet extends HttpServlet {
@@ -93,8 +92,8 @@ public class ResumeServlet extends HttpServlet {
                                     periodIndex++;
                                     continue;
                                 }
-                                LocalDate startDate = parseDate(periodStart[periodIndex]);
-                                LocalDate endDate = parseDate(periodEnd[periodIndex]);
+                                LocalDate startDate = parse(periodStart[periodIndex]);
+                                LocalDate endDate = parse(periodEnd[periodIndex]);
                                 company.setPeriod(
                                         new Company.Period(
                                                 startDate,
@@ -151,12 +150,5 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
-    }
-
-    private LocalDate parseDate(String dateStr) {
-        if (dateStr.equals("Сейчас") || dateStr.isEmpty()) {
-            return NOW;
-        }
-        return LocalDate.parse("01/" + dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.basejava.util.DateUtil.FORMATTER;
-import static com.basejava.util.DateUtil.NOW;
+import static com.basejava.util.DateUtil.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
@@ -101,17 +100,15 @@ public class Company implements Serializable {
         }
 
         public String getFormatedStartDate() {
-            return startDate.format(FORMATTER);
+            return format(startDate);
         }
 
         public String getFormatedEndDate() {
-            return endDate.format(FORMATTER);
+            return format(endDate);
         }
 
         public String getPeriod() {
-            return (endDate.equals(NOW) ?
-                    startDate.format(FORMATTER) + " – Сейчас\t" :
-                    startDate.format(FORMATTER) + " – " + endDate.format(FORMATTER) + "\t");
+            return format(startDate) + " - " + format(endDate);
         }
 
         public String getTitle() {
