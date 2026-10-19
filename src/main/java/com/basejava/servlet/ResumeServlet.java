@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.basejava.util.DateUtil.NOW;
@@ -90,7 +89,7 @@ public class ResumeServlet extends HttpServlet {
                             Company company = new Company(companyTitles[i], companyUrls[i]);
                             int count = Integer.parseInt(periodCounts[i]);
                             for (int j = 0; j < count; j++) {
-                                if (periodStart[periodIndex].isEmpty() || periodEnd[periodIndex].isEmpty()) {
+                                if (periodStart[periodIndex].isEmpty()) {
                                     periodIndex++;
                                     continue;
                                 }
@@ -155,8 +154,9 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private LocalDate parseDate(String dateStr) {
-        return dateStr.equals("Сейчас") ?
-                NOW :
-                LocalDate.parse("01/" + dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        if (dateStr.equals("Сейчас") || dateStr.isEmpty()) {
+            return NOW;
+        }
+        return LocalDate.parse("01/" + dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }
