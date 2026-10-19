@@ -92,7 +92,7 @@ public class ResumeServlet extends HttpServlet {
                             }
                             Company company = new Company(companyTitles[i], companyUrls[i]);
                             for (int j = 0; j < count; j++) {
-                                if (periodStart[periodIndex].isEmpty()) {
+                                if (periodStart[periodIndex].isEmpty() || periodTitles[periodIndex].trim().isEmpty()) {
                                     periodIndex++;
                                     continue;
                                 }
