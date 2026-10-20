@@ -19,39 +19,64 @@
             <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br>
         </c:forEach>
     </p>
-</section>
-<section>
-    <c:forEach var="sectionEntry" items="${resume.sections}">
-        <jsp:useBean id="sectionEntry"
-                     type="java.util.Map.Entry<com.basejava.model.SectionType, com.basejava.model.AbstractSection>"/>
-        <h3>${sectionEntry.key.title}</h3>
-        <c:if test="${sectionEntry.key.name() == 'OBJECTIVE' || sectionEntry.key.name() == 'PERSONAL'}">
-            ${sectionEntry.value.description}
-        </c:if>
-        <c:if test="${sectionEntry.key.name() == 'ACHIEVEMENT' || sectionEntry.key.name() == 'QUALIFICATIONS'}">
-            <c:forEach var="description" items="${sectionEntry.value.description}">
-                <ul>
-                    <li>${description}</li>
-                </ul>
-            </c:forEach>
-        </c:if>
-        <c:if test="${sectionEntry.key.name() == 'EXPERIENCE' || sectionEntry.key.name() == 'EDUCATION'}">
-            <c:forEach var="company" items="${sectionEntry.value.companies}">
-                <a href="${company.homePage.url}">${company.homePage.title}</a>
-                <c:forEach var="period" items="${company.periods}">
-                    <ul>
-                        <li>
-                                ${period.period}<br>
-                                ${period.title}<br>
-                            <c:if test="${not empty period.description}">
-                                ${period.description}
-                            </c:if>
-                        </li>
-                    </ul>
-                </c:forEach>
-            </c:forEach>
-        </c:if>
-    </c:forEach>
+    <hr>
+    <table cellpadding="2">
+        <c:forEach var="sectionEntry" items="${resume.sections}">
+            <c:set var="type" value="${sectionEntry.key}"/>
+            <c:set var="section" value="${sectionEntry.value}"/>
+            <tr>
+                <td><h3><a name="type.name">${type.title}</a></h3></td>
+                <c:if test="${type == 'OBJECTIVE'}">
+                    <td>
+                        <h3>${section.description}</h3>
+                    </td>
+                </c:if>
+            </tr>
+            <c:if test="${type != 'OBJECTIVE'}">
+                <c:choose>
+                    <c:when test="${type == 'PERSONAL'}">
+                        <tr>
+                            <td>${section.description}</td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATIONS'}">
+                        <tr>
+                            <td>
+                                <ul>
+                                    <c:forEach var="description" items="${section.description}">
+                                        <li>${description}</li>
+                                    </c:forEach>
+                                </ul>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${type == 'EXPERIENCE' || type == 'EDUCATION'}">
+                        <c:forEach var="company" items="${section.companies}">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty company.homePage.url}">
+                                            <h3>${company.homePage.title}</h3>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <h3><a href="${company.homePage.url}">${company.homePage.title}</a></h3>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                            <c:forEach var="period" items="${company.periods}">
+                                <tr>
+                                    <td>${period.period}</td>
+                                    <td><b>${period.title}</b><br>${period.description}</td>
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
+                    </c:when>
+                </c:choose>
+            </c:if>
+        </c:forEach>
+    </table>
+    <button onclick="window.history.back()">Ok</button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
