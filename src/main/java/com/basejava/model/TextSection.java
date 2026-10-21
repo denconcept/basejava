@@ -7,6 +7,7 @@ public class TextSection extends AbstractSection {
     
     @Serial
     private static final long serialVersionUID = 1L;
+    public static final TextSection EMPTY = new TextSection("");
     private String description;
 
     public TextSection() {}

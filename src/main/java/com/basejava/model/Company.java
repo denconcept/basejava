@@ -11,6 +11,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,8 +22,9 @@ public class Company implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    public static final Company EMPTY = new Company("", "", Period.EMPTY);
     private Link homePage;
-    private final List<Period> periods = new ArrayList<>();
+    private List<Period> periods = new ArrayList<>();
 
     public Company() {
     }
@@ -30,6 +32,15 @@ public class Company implements Serializable {
     public Company(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");
         this.homePage = new Link(title, url);
+    }
+
+    public Company(String name, String url, Period... periods) {
+        this(new Link(name, url), Arrays.asList(periods));
+    }
+
+    public Company(Link homePage, List<Period> periods) {
+        this.homePage = homePage;
+        this.periods = periods;
     }
 
     public Link getHomePage() {
@@ -66,7 +77,9 @@ public class Company implements Serializable {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Period implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 1L;
+        public static final Period EMPTY = new Period();
 
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         @JsonAdapter(JsonLocalDateAdapter.class)

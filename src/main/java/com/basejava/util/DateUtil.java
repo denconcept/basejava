@@ -11,11 +11,11 @@ public class DateUtil {
 
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
-    public static LocalDate parse(String dateStr) {
-        if (dateStr.equals("Сейчас") || dateStr.isEmpty()) {
+    public static LocalDate parse(String date) {
+        if (HtmlUtil.isEmpty(date) || "Сейчас".equals(date)) {
             return NOW;
         }
-        return YearMonth.parse(dateStr, FORMATTER).atDay(1);
+        return YearMonth.parse(date, FORMATTER).atDay(1);
     }
 
     public static String format(LocalDate date) {

@@ -2,6 +2,7 @@ package com.basejava.model;
 
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,9 +12,15 @@ public class CompanySection extends AbstractSection {
     private static final long serialVersionUID = 1L;
     private List<Company> companies = new ArrayList<>();
 
-    public CompanySection() {}
+    public CompanySection() {
+    }
+
+    public CompanySection(Company... companies) {
+        this(Arrays.asList(companies));
+    }
 
     public CompanySection(List<Company> companies) {
+        Objects.requireNonNull(companies, "Companies must not be null");
         this.companies = companies;
     }
 
