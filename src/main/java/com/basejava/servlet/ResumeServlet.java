@@ -13,19 +13,29 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.basejava.util.DateUtil.parse;
 
 @WebServlet("/resume")
 public class ResumeServlet extends HttpServlet {
 
+    private enum THEME {
+        dark, light, purple
+    }
+
     private Storage storage;
+    private final Set<String> themes = new HashSet<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         storage = Config.getInstance().getStorage();
+        for (THEME t : THEME.values()) {
+            themes.add(t.name());
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -104,13 +114,14 @@ public class ResumeServlet extends HttpServlet {
         } else {
             storage.update(resume);
         }
-        response.sendRedirect("resume");
+        response.sendRedirect("resume?theme=" + getTheme(request));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
         if (action == null) {
+            request.setAttribute("theme", getTheme(request));
             request.setAttribute("resumes", storage.getAllSorted());
             request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
             return;
@@ -123,6 +134,9 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "view":
                 resume = storage.get(uuid);
+                break;
+            case "add":
+                resume = Resume.EMPTY;
                 break;
             case "edit":
                 resume = storage.get(uuid);
@@ -162,15 +176,18 @@ public class ResumeServlet extends HttpServlet {
                     resume.setSection(type, section);
                 }
                 break;
-            case "create":
-                resume = Resume.EMPTY;
-                break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
+        request.setAttribute("theme", getTheme(request));
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
+    }
+
+    private String getTheme(HttpServletRequest request) {
+        String theme = request.getParameter("theme");
+        return themes.contains(theme) ? theme : THEME.light.name();
     }
 }
