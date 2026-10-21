@@ -95,7 +95,7 @@ public class DataStreamSerializer implements StreamSerializer {
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
             readWithException(dis, () ->
-                    resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+                    resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readWithException(dis, () -> {
                 String key = dis.readUTF();
                 switch (key) {
@@ -110,13 +110,13 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void readTextSections(DataInputStream dis, Resume resume, String key) throws IOException {
-        resume.addSection(SectionType.valueOf(key), new TextSection(dis.readUTF()));
+        resume.setSection(SectionType.valueOf(key), new TextSection(dis.readUTF()));
     }
 
     private void readListSections(DataInputStream dis, Resume resume, String key) throws IOException {
         List<String> items = new ArrayList<>();
         readWithException(dis, () -> items.add(dis.readUTF()));
-        resume.addSection(SectionType.valueOf(key), new ListSection(items));
+        resume.setSection(SectionType.valueOf(key), new ListSection(items));
     }
 
     private void readCompanySections(DataInputStream dis, Resume resume, String key)
@@ -128,7 +128,7 @@ public class DataStreamSerializer implements StreamSerializer {
             Company company = new Company(title, url);
             readPeriods(dis, company);
             companySection.addCompany(company);
-            resume.addSection(SectionType.valueOf(key), companySection);
+            resume.setSection(SectionType.valueOf(key), companySection);
         });
     }
 
