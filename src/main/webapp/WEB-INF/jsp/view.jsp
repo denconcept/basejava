@@ -25,7 +25,7 @@
             <c:set var="type" value="${sectionEntry.key}"/>
             <c:set var="section" value="${sectionEntry.value}"/>
             <tr>
-                <td><h3><a name="type.name">${type.title}</a></h3></td>
+                <td><h3><a id="${type.name()}">${type.title}</a></h3></td>
                 <c:if test="${type == 'OBJECTIVE'}">
                     <td>
                         <h3>${section.description}</h3>

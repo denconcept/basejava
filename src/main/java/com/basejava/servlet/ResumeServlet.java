@@ -41,6 +41,7 @@ public class ResumeServlet extends HttpServlet {
             resume = storage.get(uuid);
             resume.setFullName(fullName);
         }
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (HtmlUtil.isEmpty(value)) {

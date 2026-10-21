@@ -13,21 +13,19 @@
 <jsp:include page="fragments/header.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
-        <c:if test="${not empty resume.uuid}">
-            <input type="hidden" name="uuid" value="${resume.uuid}">
-        </c:if>
+        <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" placeholder="ФИО"></dd>
+            <dd><input type="text" name="fullName" size="50" value="${resume.fullName}" placeholder="ФИО"></dd>
         </dl>
         <h3>Контакты</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
-                <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"
+                <dd><input type="text" name="${type.name()}" size="30" value="${resume.getContact(type)}"
                            placeholder="${type.title}"></dd>
             </dl>
         </c:forEach>
-        <h3>Секции:</h3>
+        <hr>
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <c:set var="section" value="${resume.getSection(type)}"/>
             <h3>${type.title}</h3>
