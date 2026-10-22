@@ -63,7 +63,7 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
             String[] values = request.getParameterValues(type.name());
-            if (HtmlUtil.isEmpty(value) && values.length < 2) {
+            if (values == null || (HtmlUtil.isEmpty(value) && values.length < 2)) {
                 resume.getSections().remove(type);
             } else {
                 switch (type) {
@@ -130,7 +130,7 @@ public class ResumeServlet extends HttpServlet {
         switch (action) {
             case "delete":
                 storage.delete(uuid);
-                response.sendRedirect("resume");
+                response.sendRedirect("resume?theme=" + getTheme(request));
                 return;
             case "view":
                 resume = storage.get(uuid);
@@ -154,7 +154,9 @@ public class ResumeServlet extends HttpServlet {
                             ListSection listSection = (ListSection) section;
                             List<String> emptyFirstDescriptions = new ArrayList<>();
                             emptyFirstDescriptions.add("");
-                            emptyFirstDescriptions.addAll(listSection.getDescription());
+                            if (listSection != null) {
+                                emptyFirstDescriptions.addAll(listSection.getDescription());
+                            }
                             section = new ListSection(emptyFirstDescriptions);
                             break;
                         case EXPERIENCE:
